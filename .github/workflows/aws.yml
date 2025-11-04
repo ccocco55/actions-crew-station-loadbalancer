@@ -1,0 +1,84 @@
+name: ec2_aws_deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    if: github.repository == 'ccocco55/docker'
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        include:
+          - name: EC2_HOST_1
+          - name: EC2_HOST_2
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set HOST env var from secrets
+      run: echo "HOST=${{ secrets[matrix].name }} >> $GITHUB_ENV
+
+    - name: Debug EC2_HOST
+      run: echo "EC2_HOST is ${{ secrets.EC2_HOST }}"
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
+    - name: Copy project to EC2
+      run: |
+        rsync -avz -e "ssh -i ~/.ssd/id_rsa" . ${{ secrets.EC2_USER }}@$HOST:/home/ubuntu/crew-station
+
+    - name: Build & Run Docker on EC2
+      run: |
+        ssh -i ~/.ssd/id_rsa ${{ secrets.EC2_USER }}@$HOST << EOF
+          cd /home/ubuntu/crew-station
+          docker stop crew-station || true
+          docker rm crew-station || true
+          docker rmi crew-station || true
+          docker build --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            --build-arg EC2_HOST=${{ secrets.EC2_HOST }} \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            --build-arg KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
+            --build-arg KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
+            --build-arg NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
+            --build-arg NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
+            --build-arg MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}" \
+            --build-arg SMS_ACCESS=${{ secrets.SMS_ACCESS }} \
+            --build-arg SMS_SECRET_KEY=${{ secrets.SMS_SECRET_KEY }} \
+          -t crew-station .
+          docker run -d -p 80:10000 --name crew-station \
+            -e EC2_HOST=${{ secrets.EC2_HOST }} \
+            -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -e AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} \
+            -e AWS_REGION=${{ secrets.AWS_REGION }} \
+            -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
+            -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
+            -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
+            -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}" \
+            -e SMS_ACCESS=${{ secrets.SMS_ACCESS }} \
+            -e SMS_SECRET_KEY=${{ secrets.SMS_SECRET_KEY }} \
+            crew-station
+            
+    - name: Clean up not used images
+      if: success()
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          docker image prune -f
+          docker container prune -f
