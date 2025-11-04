@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: EC2_HOST_1
-          - name: EC2_HOST_2
+          - name: EC2_HOST1
+          - name: EC2_HOST2
 
     steps:
     - name: Checkout code
