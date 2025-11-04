@@ -78,6 +78,6 @@ jobs:
     - name: Clean up not used images
       if: success()
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@$HOST << 'EOF'
           docker image prune -f
           docker container prune -f
