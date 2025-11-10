@@ -1,12 +1,10 @@
 package com.example.crewstation.repository.member;
 
-import com.example.crewstation.common.enumeration.MemberRole;
+import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.*;
-import com.example.crewstation.dto.purchase.PurchaseListDTO;
 import com.example.crewstation.mapper.member.MemberMapper;
 import com.example.crewstation.util.Criteria;
-import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +45,8 @@ public class MemberDAO {
     }
 
     //    sns 회원 조회
-    public Optional<MemberDTO> findBySnsEmail(String snsEmail) {
-        return memberMapper.selectMemberBySnsEmail(snsEmail);
+    public Optional<MemberDTO> findBySnsEmail(String snsEmail, MemberProvider provider) {
+        return memberMapper.selectMemberBySnsEmail(snsEmail, provider);
     }
 
     //  게스트 추가
@@ -131,11 +129,24 @@ public class MemberDAO {
         return memberMapper.selectMyInfo(memberId);
     }
 
+//  내 정보 수정 업데이트
+    public void updateMember(MemberVO memberVO) {
+        memberMapper.updateMember(memberVO);
+    }
+
+    public MemberProfileDTO selectMyPageProfileById(Long memberId) {
+        return memberMapper.selectMyPageProfileById(memberId);
+    }
 
 
 //    id로 멤버 조회
     public MemberDTO findMemberById(Long memberId){
        return memberMapper.selectMemberById(memberId);
     };
+
+//  탈퇴하기
+    public void updateMemberStatusInactive(Long memberId)  {
+        memberMapper.updateMemberStatusInactive(memberId);
+    }
 
 }

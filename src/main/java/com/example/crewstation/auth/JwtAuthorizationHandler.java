@@ -17,16 +17,16 @@ public class JwtAuthorizationHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.error("AccessDeniedException: {}", accessDeniedException.getMessage());
 
+//            REST 요청인 경우
         if(request.getRequestURI().startsWith("/api/")){
             log.error("accessDeniedException Exception: {}", accessDeniedException.getMessage());
-//            REST 요청인 경우
 //            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized: Access Denied");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write("로그인 후 사용 가능");
             response.getWriter().flush();
         }else{
-//            일반 웹 요청인 경우
+//            모바일 요청인 경우
             if (request.getRequestURI().startsWith("/mobile/")) {
                 response.sendRedirect("/mobile/login");
             } else {

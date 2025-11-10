@@ -33,8 +33,6 @@ public class GiftServiceImpl implements GiftService {
 
     private final GiftDAO giftDAO;
     private final S3Service s3Service;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final GiftTransactionService giftTransactionService;
     private static final Map<String, String> ORDER_TYPE_MAP = Map.of(
             "좋아요순", "vpp.purchase_product_count desc",
             "최신순",   "vpp.created_datetime desc"
@@ -49,43 +47,23 @@ public class GiftServiceImpl implements GiftService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<GiftDTO> getGift(int limit) {
-        log.info("기프트 목록 입니다.:{}",redisTemplate.opsForValue().get("gifts"));
-        Object obj = redisTemplate.opsForValue().get("gifts");
-        log.info("오브젝트 확인:::::{}",obj);
-        List<GiftDTO> gifts = null;
-        if (obj != null) {
-            ObjectMapper mapper = new ObjectMapper();
-             gifts = mapper.convertValue(
-                    obj,
-                    new TypeReference<List<GiftDTO>>() {}
-            );
-        }
-        log.info("obj {}::::::::",obj);
-        log.info("gifts {}::::::::",gifts);
-//        List<GiftDTO> gifts = (List<GiftDTO>) redisTemplate.opsForValue().get("gifts");
-        if (gifts != null) {
-            gifts.forEach(gift -> {
-                String filePath = gift.getFilePath();
-                log.info("filePath 검사:{}",filePath);
-//                String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
-//                if(gift.getMemberFilePath() != null){
-//                    gift.setMemberFilePath(s3Service.getPreSignedUrl(gift.getMemberFilePath(), Duration.ofMinutes(5)));
-//                }
-//
-//                log.info("Gift ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
-//                        gift, filePath, presignedUrl);
-//                gift.setFilePath(presignedUrl);
+        List<GiftDTO> gifts = giftDAO.getMainGifts(limit);
+        gifts.forEach(gift -> {
+            String filePath = gift.getFilePath();
+            String presignedUrl = s3Service.getPreSignedUrl(filePath, Duration.ofMinutes(5));
+            if(gift.getMemberFilePath() != null){
+                gift.setMemberFilePath(s3Service.getPreSignedUrl(gift.getMemberFilePath(), Duration.ofMinutes(5)));
+            }
+            gift.setRelativeDate(DateUtils.toRelativeTime(gift.getCreatedDatetime()));
+            gift.setLimitDateTime(DateUtils.calcLimitDateTime(gift.getCreatedDatetime(),gift.getPurchaseLimitTime()));
+            log.info("Gift ID={}, 원본 filePath={}, 발급된 presignedUrl={}",
+                    gift, filePath, presignedUrl);
 
-            });
-//            ObjectMapper mapper = new ObjectMapper();
-//            obj = mapper.convertValue(gifts, Object.class);
-            redisTemplate.opsForValue().set("gifts", gifts, Duration.ofMinutes(5));
-            return gifts;
+            gift.setFilePath(s3Service.getPreSignedUrl(gift.getFilePath(), Duration.ofMinutes(5)));
 
-        }
-//    return null;
-        return giftTransactionService.getMainGifts(limit);
-
+        });
+//        redisTemplate.opsForValue().set("gifts", gifts, Duration.ofMinutes(5));
+        return gifts;
     }
 
     @Override
@@ -118,6 +96,16 @@ public class GiftServiceImpl implements GiftService {
             }
             if (gift.getCreatedDatetime() != null) {
                 gift.setRelativeDate(DateUtils.toRelativeTime(gift.getCreatedDatetime()));
+            }
+            if (gift.getMemberFilePath() != null) {
+                gift.setMemberFilePath(
+                        s3Service.getPreSignedUrl(gift.getMemberFilePath(), Duration.ofMinutes(5))
+                );
+            }
+            if (gift.getCreatedDatetime() != null && gift.getPurchaseLimitTime() != null) {
+                gift.setLimitDateTime(
+                        DateUtils.calcLimitDateTime(gift.getCreatedDatetime(), gift.getPurchaseLimitTime())
+                );
             }
 
         });

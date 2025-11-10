@@ -42,7 +42,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             jwtTokenProvider.createAccessToken(email, provider);
             jwtTokenProvider.createRefreshToken(email, provider);
 
-            path = "/";
+            String ua = request.getHeader("User-Agent");
+
+            boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
+
+            if (isMobile) {
+                path = "/gifts";
+            } else {
+                path = "/";
+            }
+
+
         }else{
             Cookie memberEmailCookie = new Cookie("memberSocialEmail", email);
             memberEmailCookie.setHttpOnly(true);     // JS에서 접근 불가 (XSS 방지)
@@ -81,8 +91,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             boolean isMobile = ua != null && (ua.contains("iPhone") || ua.contains("Android"));
 
             if (isMobile) {
+                log.info("mobile");
                 path = "/mobile/sns/join";
             } else {
+                log.info("web");
                 path = "/member/sns/join";
             }
         }

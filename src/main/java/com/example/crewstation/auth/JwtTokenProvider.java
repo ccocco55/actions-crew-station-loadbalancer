@@ -38,7 +38,9 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
+        // Base64로 인코딩된 문자열 형태의 secretKey를 디코딩하여 바이트 배열로 변환
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+        // 디코딩된 바이트 배열을 기반으로 HMAC-SHA 알고리즘을 사용하는 서명 키 생성
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -58,11 +60,11 @@ public class JwtTokenProvider {
                 .compact();
 
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(false);
-        accessTokenCookie.setPath("/");
+        accessTokenCookie.setHttpOnly(true); // JavaScript에서 접근할 수 없도록 설정하여 XSS 공격 방지
+        accessTokenCookie.setSecure(false); // HTTP/HTTPS 모두에서 쿠키 전송 가능
+        accessTokenCookie.setPath("/"); // 쿠키가 모든 경로에서 유효하도록 설정
         accessTokenCookie.setMaxAge(60 * 10); // 10분
-        response.addCookie(accessTokenCookie);
+        response.addCookie(accessTokenCookie); // 설정한 쿠키를 응답에 추가하여 클라이언트로 전송
 
         return accessToken;
     }
@@ -94,9 +96,11 @@ public class JwtTokenProvider {
 //    JWT 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
+            // JWT 파서 생성 후 서명 키를 설정하고 토큰을 파싱하여 클레임을 검증
             Jwts.parserBuilder()
                     .setSigningKey(key).build()
                     .parseClaimsJws(token);
+            // 예외가 발생하지 않으면 유효한 토큰으로 판단
             return true;
         } catch (JwtException | IllegalArgumentException e) {
 //            ExpiredJwtException: 토큰 만료
@@ -111,8 +115,17 @@ public class JwtTokenProvider {
 //    토큰 만료 검사
     public boolean isTokenExpired(String token){
         try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            // 토큰을 파싱하여 클레임(Claims) 객체를 추출
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key) // 서명 키 설정
+                    .build()
+                    .parseClaimsJws(token) // 토큰 파싱 및 서명 검증
+                    .getBody(); // 클레임 정보 추출
+
+            // 클레임에서 만료 시간 추출
             Date expiration = claims.getExpiration();
+
+            // 현재 시간과 비교하여 만료 여부 반환
             return expiration.before(new Date());
         } catch (ExpiredJwtException e){
             return true;

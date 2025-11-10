@@ -42,4 +42,5 @@ public class PaymentCriteriaDTO {
     private long totalCount;
     private long approvedAmount;
     private long canceledAmount;
+    private String listedAt;
 }

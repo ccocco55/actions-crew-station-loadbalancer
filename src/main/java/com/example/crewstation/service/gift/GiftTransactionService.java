@@ -40,7 +40,7 @@ public class GiftTransactionService {
             gift.setFilePath(s3Service.getPreSignedUrl(gift.getFilePath(), Duration.ofMinutes(5)));
 
         });
-        redisTemplate.opsForValue().set("gifts", gifts, Duration.ofMinutes(5));
+//        redisTemplate.opsForValue().set("gifts", gifts, Duration.ofMinutes(5));
         return gifts;
     }
 

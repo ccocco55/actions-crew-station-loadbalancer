@@ -23,36 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/gifts/**")
 public class PurchaseRestController {
     private final PurchaseService purchaseService;
-    //    임시 로그인
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
-    public ResponseEntity<PurchaseCriteriaDTO> getPurchases(@RequestParam int page,@RequestParam String keyword) {
-        Search search = new Search();
-        search.setPage(page);
-        search.setKeyword(keyword);
+    public ResponseEntity<PurchaseCriteriaDTO> getPurchases(Search search) {
         PurchaseCriteriaDTO purchases = purchaseService.getPurchases(search);
         return ResponseEntity.ok().body(purchases);
-    }
-
-
-
-//  임시 로그인 정보 가져오기 나중에 삭제해야합니다.
-    @GetMapping("info")
-    public ResponseEntity<MemberDTO> getPurchase(HttpServletRequest request) {
-        String token = jwtTokenProvider.parseTokenFromHeader(request);
-        if (token == null) {
-            throw   new RuntimeException("토큰이 없습니다.");
-        }
-        // 블랙리스트 체크 추가
-        if (jwtTokenProvider.isTokenBlackList(token)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그아웃된 토큰입니다.");
-        }
-        String memberEmail = jwtTokenProvider.getUserName(token);
-        String provider = (String) jwtTokenProvider.getClaims(token).get("provider");
-        MemberDTO member = new MemberDTO();
-        member.setId(1L);
-        return ResponseEntity.ok().body(member);
     }
 
 }

@@ -1,11 +1,10 @@
 package com.example.crewstation.dto.member;
 
-import com.example.crewstation.common.enumeration.DeliveryMethod;
-import com.example.crewstation.common.enumeration.PaymentPhase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 @ToString
 @NoArgsConstructor
 public class ModifyDTO {
+    private Long memberId;
     private String memberEmail;
     private String memberName;
     private String memberBirth;
@@ -23,11 +23,12 @@ public class ModifyDTO {
     private String address;
     private String addressDetail;
     private String memberSocialUrl;
-    private String memberProfileImg;
+    private String socialImgUrl;
+    private String memberSocialEmail;
 
     private String filePath;
     private String fileName;
 
-    // 이미지 URL
-    private String profileImageUrl;
+    private MultipartFile profileFile;  // 업로드할 실제 파일
+    private String memberProfileImg; // 프로필 조회용
 }

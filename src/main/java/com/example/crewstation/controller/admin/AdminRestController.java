@@ -13,6 +13,7 @@ import com.example.crewstation.dto.payment.status.PaymentCriteriaDTO;
 import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.payment.PaymentDAO;
 import com.example.crewstation.repository.payment.status.PaymentStatusDAO;
+import com.example.crewstation.service.accompany.AccompanyService;
 import com.example.crewstation.service.ask.adminAsk.AdminAskService;
 import com.example.crewstation.service.banner.BannerService;
 import com.example.crewstation.service.banner.BannerTransactionService;
@@ -53,12 +54,13 @@ public class AdminRestController implements AdminRestControllerDocs{
     private final PaymentStatusDAO paymentStatusDAO;
     private final AdminAskService adminAskService;
     private static final Map<String, String> PHASE_MAP = Map.of(
-            "PAY_PROGRESS", "PENDING",
-            "PAY_SUCCESS",  "SUCCESS",
-            "PAY_CANCEL",   "REFUND"
+            "결제 진행중", "PROGRESS",
+            "결제완료", "SUCCESS",
+            "결제취소", "CANCEL"
     );
     private final BannerTransactionService bannerTransactionService;
     private final BannerService bannerService;
+    private final AccompanyService accompanyService;
 
     //    관리자 회원 목록
     @PostMapping("/members")
@@ -283,6 +285,28 @@ public class AdminRestController implements AdminRestControllerDocs{
         bannerService.deleteBanner(bannerId);
         return ResponseEntity.ok().build();
     }
+
+//    관리자 동행 신고 목록
+    @GetMapping("/accompanies")
+    public ResponseEntity<List<ReportPostDTO>> getAccompanies(Search search) {
+        List<ReportPostDTO> reports = reportService.getReportAccompanies(search);
+        return ResponseEntity.ok(reports);
+    }
+
+//    관리자 동행신고 처리
+    @PostMapping("/accompanies/{reportId}/process")
+    public ResponseEntity<List<ReportPostDTO>> getAccompanies(@PathVariable Long reportId,
+                                                              @RequestParam(required = false) Long postId,
+                                                              @RequestParam(defaultValue = "false") boolean hidePost) {
+        log.info("process report: reportId={}, postId={}, hidePost={}", reportId, postId, hidePost);
+        if (hidePost && postId != null) {
+            reportService.hidePost(postId);
+        }
+        reportService.resolveReport(reportId);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 
 

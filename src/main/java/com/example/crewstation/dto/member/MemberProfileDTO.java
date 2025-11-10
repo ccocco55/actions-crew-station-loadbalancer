@@ -14,4 +14,5 @@ public class MemberProfileDTO {
     private String memberName;
     private String profileImage;
     private String filePath;
+    private String socialImgUrl;
 }

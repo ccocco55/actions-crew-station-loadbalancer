@@ -1,5 +1,6 @@
 package com.example.crewstation.repository.report;
 
+import com.example.crewstation.common.enumeration.AccompanyStatus;
 import com.example.crewstation.domain.report.ReportVO;
 import com.example.crewstation.domain.report.post.ReportPostVO;
 import com.example.crewstation.domain.report.reply.ReportReplyVO;
@@ -8,6 +9,7 @@ import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.mapper.report.ReportMapper;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -59,6 +61,16 @@ public class ReportDAO {
 //    관리자 기프트 신고 갯수
     public int countAllReportGifts() {
         return reportMapper.selectReportGiftsCount();
+    }
+
+//    관리자 동행 신고 내역
+    public List<ReportPostDTO> accompanyReportList(ScrollCriteria scrollCriteria ,Search search) {
+        return reportMapper.selectAllReportAccompany(scrollCriteria ,search);
+    }
+
+//    관리자 동행 신고 갯수
+    public int countAllReportAccompany(AccompanyStatus accompanyStatus) {
+        return reportMapper.selectReportAccompanyCount(accompanyStatus);
     }
 
 }

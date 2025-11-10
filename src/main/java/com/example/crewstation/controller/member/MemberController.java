@@ -34,6 +34,7 @@ public class MemberController {
         return "member/web/join";
     }
 
+//    회원가입
     @PostMapping("join")
     public RedirectView join(@ModelAttribute("memberDTO") MemberDTO memberDTO, @RequestParam("file")MultipartFile multipartFile) {
         memberService.join(memberDTO, multipartFile);
@@ -41,7 +42,7 @@ public class MemberController {
         return new RedirectView("/member/login");
     }
 
-    //    web 로그인
+//    web 로그인
     @GetMapping("login")
     public String login(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
@@ -49,8 +50,7 @@ public class MemberController {
         return "member/web/login";
     }
 
-// guest
-
+// guest 로그인
     @PostMapping("login")
     public RedirectView login(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
@@ -107,7 +107,7 @@ public class MemberController {
         return new RedirectView("/member/reset-password-success");
     }
     
-    // 비밀벌호 변경 성공
+// 비밀벌호 변경 성공
     @GetMapping("reset-password-success")
     public String resetPasswordSuccess() {
         return "member/web/reset-password-success";

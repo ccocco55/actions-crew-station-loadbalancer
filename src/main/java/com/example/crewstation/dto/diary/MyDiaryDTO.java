@@ -1,7 +1,9 @@
-package com.example.crewstation.dto.member;
+package com.example.crewstation.dto.diary;
 
-import com.example.crewstation.common.enumeration.PaymentPhase;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,29 +16,21 @@ import java.util.regex.Pattern;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class MySaleListDTO {
-    private Long memberId;
+@EqualsAndHashCode(of="id")
+public class MyDiaryDTO {
+    private Long id;
     private Long postId;
     private String postTitle;
-    private String purchaseProductPrice;
-    private Long fileId;
-    private String filePath;
-    private String fileName;
-    private String fileOriginName;
+    private Long diaryId;
+    private String mainImage;
+    private Long memberId;
+    private Long diaryPathId;
+    private String postContent;
     private String createdDatetime;
     private String updatedDatetime;
-    private PaymentPhase status;
-    private Long paymentStatusId;
 
     public String getFormattedCreatedDatetime() {
         return formatDateString(createdDatetime);
-    }
-
-    public String getFormattedUpdatedDatetime() {
-        return formatDateString(updatedDatetime);
     }
 
     private String formatDateString(String datetime) {

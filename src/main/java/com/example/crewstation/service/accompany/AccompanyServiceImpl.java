@@ -1,12 +1,17 @@
 package com.example.crewstation.service.accompany;
 
 import com.example.crewstation.aop.aspect.annotation.LogReturnStatus;
+import com.example.crewstation.common.enumeration.ProcessStatus;
+import com.example.crewstation.common.enumeration.Status;
 import com.example.crewstation.dto.accompany.AccompanyCriteriaDTO;
 import com.example.crewstation.dto.accompany.AccompanyDTO;
+import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.accompany.AccompanyDAO;
+import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.service.s3.S3Service;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.DateUtils;
+import com.example.crewstation.util.ScrollCriteria;
 import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,7 @@ public class AccompanyServiceImpl implements AccompanyService {
     private final AccompanyTransactionService accompanyTransactionService;
     private final RedisTemplate<String, Object> redisTemplate;
     private final AccompanyDAO accompanyDAO;
+    private final ReportDAO reportDAO;
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final Map<String,String> ORDER_TYPE_MAP = Map.of(
             "최신순",   "vpc.created_datetime desc",
@@ -94,6 +100,29 @@ public class AccompanyServiceImpl implements AccompanyService {
         dto.setCriteria(criteria);
         dto.setTotalCount(totalCount);
         return dto;
+    }
+
+    @Override
+    public List<ReportPostDTO> getReportAccompaniesList(Search search) {
+        ScrollCriteria scrollCriteria = new ScrollCriteria(search.getPage(), 10);
+        scrollCriteria.setTotal(accompanyDAO.countAccompanies(search));
+
+        return reportDAO.accompanyReportList(scrollCriteria,search);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void hidePost(Long postId) {
+        log.info("게시글 숨김 postId={}", postId);
+        reportDAO.updatePostStatus(postId, Status.INACTIVE.getValue());
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resolveReport(Long reportId) {
+        log.info("신고 처리 상태 변경 reportId={}", reportId);
+        reportDAO.updateReportProcessStatus(reportId, ProcessStatus.RESOLVED.getValue());
     }
 
 }

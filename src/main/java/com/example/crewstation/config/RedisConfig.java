@@ -4,6 +4,7 @@ import com.example.crewstation.dto.accompany.AccompanyDTO;
 import com.example.crewstation.dto.banner.BannerDTO;
 import com.example.crewstation.dto.crew.CrewDTO;
 import com.example.crewstation.dto.diary.DiaryDTO;
+import com.example.crewstation.dto.diary.DiaryDetailDTO;
 import com.example.crewstation.dto.gift.GiftDTO;
 import com.example.crewstation.dto.member.MemberProfileDTO;
 import com.example.crewstation.dto.purchase.PurchaseDTO;
@@ -70,6 +71,21 @@ public class RedisConfig {
 
         Jackson2JsonRedisSerializer<PurchaseDTO> serializer =
                 new Jackson2JsonRedisSerializer<>(PurchaseDTO.class);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, DiaryDetailDTO> diaryRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, DiaryDetailDTO> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        Jackson2JsonRedisSerializer<DiaryDetailDTO> serializer =
+                new Jackson2JsonRedisSerializer<>(DiaryDetailDTO.class);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);

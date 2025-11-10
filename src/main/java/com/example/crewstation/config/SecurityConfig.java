@@ -66,6 +66,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/login/oauth2/**",
                                 "/notice/detail/**",
                                 "/api/auth/guest-login",
                                 "/admin/login",
@@ -76,11 +77,14 @@ public class SecurityConfig {
                                 "/member/join",
                                 "/member/login",
                                 "/member/sns/join",
-                                "/member/profile/**",
+                                "/member/profile/{memberId:\\d+}",
+                                "/api/member/profile/{memberId:\\d+}",
+                                "/api/diaries/profile/{memberId:\\d+}",
                                 "/mobile/join",
                                 "/mobile/login",
                                 "/mobile/sns/join",
                                 "/member/forgot-password",
+                                "/mobile/forgot-password",
                                 "/api/member/**",
                                 "/member/reset-password-success",
                                 "/mobile/reset-password-success",

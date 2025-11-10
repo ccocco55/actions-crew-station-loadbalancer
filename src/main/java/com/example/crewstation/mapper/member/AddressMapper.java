@@ -8,5 +8,8 @@ public interface AddressMapper {
     //    회원가입시 주소
     public void insert(AddressVO addressVO);
 
+    //  내 정보 수정 주소 수정
+    public int updateAddress(AddressVO addressVO);
+
 
 }

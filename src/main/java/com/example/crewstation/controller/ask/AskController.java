@@ -24,7 +24,7 @@ public class AskController {
     @GetMapping("register")
     public String goToRegisterForm(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
         model.addAttribute("memberId", customUserDetails.getId());
-        return "/ask/register";
+        return "ask/register";
     }
 
     @PostMapping("register")

@@ -19,5 +19,8 @@ public interface FileMapper {
 //  파일 조회
     FileDTO selectOne(@Param("id") Long id);
 
+//  멤버-파일 조회
+    public FileDTO findProfileByMemberId(@Param("memberId") Long memberId);
+
 
 }

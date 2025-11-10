@@ -1,6 +1,7 @@
 package com.example.crewstation.dto.file.tag;
 
 
+import com.example.crewstation.common.enumeration.Type;
 import com.example.crewstation.dto.post.file.tag.PostFileTagDTO;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ImageDTO {
     private MultipartFile image;
     private Long postId;
+    private Type thumbnail;
     private Long postSectionId;
     private Long fileId;
     private String postContent;

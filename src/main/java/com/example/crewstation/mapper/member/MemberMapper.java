@@ -1,5 +1,6 @@
 package com.example.crewstation.mapper.member;
 
+import com.example.crewstation.common.enumeration.MemberProvider;
 import com.example.crewstation.domain.member.MemberVO;
 import com.example.crewstation.dto.member.*;
 import com.example.crewstation.util.Criteria;
@@ -28,7 +29,7 @@ public interface MemberMapper {
     public Optional<MemberDTO> selectMemberByMemberEmail(String memberEmail);
 
 //    sns 조회
-    public Optional<MemberDTO> selectMemberBySnsEmail(String snsEmail);
+    public Optional<MemberDTO> selectMemberBySnsEmail(@Param("memberSocialEmail") String memberSocialEmail, @Param("provider") MemberProvider provider);
 
 //  게스트 추가
     public void insertGuest(MemberDTO memberDTO);
@@ -85,12 +86,20 @@ public interface MemberMapper {
     public void insertAdmin(MemberDTO memberDTO);
 
 
-//  내 정보 수정 정보조회
+    //  내 정보 수정 정보조회
     public ModifyDTO selectMyInfo(Long memberId);
 
+    // 내 정보 수정 업데이트
+    public void updateMember(MemberVO memberVO);
 
-//    id로 멤버 조회
+    //    id로 멤버 조회
     public MemberDTO selectMemberById(Long memberId);
+
+    //    마이페이지에서 프로필 조회용
+    public MemberProfileDTO selectMyPageProfileById(Long memberId);
+
+    //  탈퇴하기
+    public void updateMemberStatusInactive(Long memberId);
 
 
 }

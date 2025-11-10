@@ -25,7 +25,7 @@ public class MobileMemberController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    //    mobile 회원가입
+//    mobile 회원가입
     @GetMapping("join")
     public String mobileJoin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
@@ -41,7 +41,7 @@ public class MobileMemberController {
         return new RedirectView("/mobile/login");
     }
 
-    //    mobile 로그인
+//    mobile 로그인
     @GetMapping("login")
     public String mobileLogin(MemberDTO memberDTO, GuestDTO guestDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
@@ -49,7 +49,7 @@ public class MobileMemberController {
         return "member/mobile/login";
     }
 
-//    게스트
+//    게스트 로그인
     @PostMapping("login")
     public RedirectView mobileLogin(@ModelAttribute("guestDTO") GuestDTO guestDTO) {
         guestService.login(guestDTO);
@@ -58,7 +58,7 @@ public class MobileMemberController {
         return new RedirectView("/guest/order-detail");
     }
 
-    //    mobile sns 회원가입
+//    mobile sns 회원가입
     @GetMapping("sns/join")
     public String mobileJoin(@CookieValue(value = "memberSocialEmail", required = false) String memberSocialEmail,
                           @CookieValue(value = "profile", required = false) String socialProfile,
@@ -91,7 +91,7 @@ public class MobileMemberController {
 
 
 
-//    mobile
+//    mobile 비밀번호 변경
     @GetMapping("forgot-password")
     public String mobileChangePassword(MemberDTO memberDTO, Model model) {
         model.addAttribute("memberDTO", memberDTO);
@@ -107,7 +107,7 @@ public class MobileMemberController {
         return new RedirectView("/mobile/reset-password-success");
     }
 
-    // 비밀벌호 변경 성공
+// 비밀벌호 변경 성공
     @GetMapping("reset-password-success")
     public String mobileResetPasswordSuccess() {
         return "member/mobile/reset-password-success";

@@ -20,7 +20,6 @@ public class TagTransactionService {
     private final RedisTemplate<String, Map<String,Long>> countryRedisTemplate;
     private final CountryDAO countryDAO;
 
-    @Transactional(rollbackFor = Exception.class)
     public Map<String, Long>  getCountries() {
         List<CountryDTO> countryDTOList = countryDAO.findAll();
         Map<String, Long> map = countryDTOList.stream().collect(Collectors.toMap(CountryDTO::getCountryName,CountryDTO::getId));

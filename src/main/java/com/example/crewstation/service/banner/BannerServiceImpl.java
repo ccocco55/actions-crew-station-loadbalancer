@@ -154,6 +154,7 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteBanner(Long id) {
         if (id == null) return;
 

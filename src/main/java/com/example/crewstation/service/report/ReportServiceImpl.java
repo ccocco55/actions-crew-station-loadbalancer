@@ -11,6 +11,7 @@ import com.example.crewstation.dto.report.post.ReportPostDTO;
 import com.example.crewstation.repository.post.PostDAO;
 import com.example.crewstation.repository.report.ReportDAO;
 import com.example.crewstation.util.ScrollCriteria;
+import com.example.crewstation.util.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,13 @@ public class ReportServiceImpl implements ReportService {
     public void hidePost(Long postId) {
         log.info("게시글 숨김 postId={}", postId);
         reportDAO.updatePostStatus(postId, Status.INACTIVE.getValue());
+    }
+
+    @Override
+    public List<ReportPostDTO> getReportAccompanies(Search search) {
+        ScrollCriteria scrollCriteria = new ScrollCriteria(search.getPage(), 10);
+        scrollCriteria.setTotal(reportDAO.countAllReportAccompany(search.getAccompanyStatus()));
+        return reportDAO.accompanyReportList(scrollCriteria, search);
     }
 
     @Override

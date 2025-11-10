@@ -16,4 +16,9 @@ public class AddressDAO {
         addressMapper.insert(addressVO);
     }
 
+    // 주소 수정
+    public int update(AddressVO addressVO) {
+        return addressMapper.updateAddress(addressVO);
+    }
+
 }

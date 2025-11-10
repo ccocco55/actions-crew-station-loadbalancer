@@ -20,11 +20,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class MembersApiController implements MembersApiControllerDocs {
-    //    이메일 중복 검사
     private final MemberService memberService;
     private final MailService mailService;
     private final JoinSmsService joinSmsService;
 
+//    이메일 중복 검사
     @PostMapping("email-check")
     @LogReturnStatus
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
@@ -42,6 +42,7 @@ public class MembersApiController implements MembersApiControllerDocs {
                 .orElse(ResponseEntity.notFound().build()); // 없으면 404
     }
 
+//    이메일로 인증 코드 전송
     @PostMapping("/send-email")
     @LogReturnStatus
     public ResponseEntity<Map<String, String>> sendEmail(@RequestParam("email") String email) {

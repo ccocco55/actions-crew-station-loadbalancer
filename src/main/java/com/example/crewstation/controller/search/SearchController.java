@@ -38,16 +38,16 @@ public class SearchController {
 
         log.info("통합 검색 요청 - keyword: {}", search.getKeyword());
 
-        CrewCriteriaDTO crews = crewService.getSearchCrews(search);
+//        CrewCriteriaDTO crews = crewService.getSearchCrews(search);
         DiaryCriteriaDTO diaries = diaryService.countDiaryImg(search,customUserDetails);
-        AccompanyCriteriaDTO accompanies = accompanyService.getSearchAccompanies(search);
+//        AccompanyCriteriaDTO accompanies = accompanyService.getSearchAccompanies(search);
         GiftCriteriaDTO gifts = giftService.getGifts(search,customUserDetails);
 
 
         model.addAttribute("keyword", search.getKeyword());
-        model.addAttribute("crews", crews);
+//        model.addAttribute("crews", crews);
         model.addAttribute("diaries", diaries);
-        model.addAttribute("accompanies", accompanies);
+//        model.addAttribute("accompanies", accompanies);
         model.addAttribute("gifts", gifts);
 
 

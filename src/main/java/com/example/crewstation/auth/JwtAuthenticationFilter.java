@@ -25,23 +25,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+//      요청 헤더에서 JWT 액세스 토큰을 추출
         String token = jwtTokenProvider.parseTokenFromHeader(request);
 
+//      액세스  토큰이 존재하는 경우
         if(token != null) {
             log.info("Token found: {}", token);
+            // 토큰 유효성 검사
             if(jwtTokenProvider.validateToken(token)){
                 log.info("Token is valid");
+                // 블랙리스트에 등록된 토큰인지 확인
                 if(jwtTokenProvider.isTokenBlackList(token)){
                     log.info("Token is blacklisted");
+                    // 인증 실패 응답 반환
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "This token is logout token");
                     return;
                 }
-
+                // 토큰으로부터 인증 객체 생성
                 UsernamePasswordAuthenticationToken authentication =
                         (UsernamePasswordAuthenticationToken) jwtTokenProvider.getAuthentication(token);
-
+                // 인증 객체에 요청 정보를 추가
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+// SecurityContext에 인증 정보 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("Authentication:"+authentication);
                 log.info("Authentication name: {}", authentication.getName());
@@ -51,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.warn("Token is not valid");
             }
         } else {
+            // 액세스 토큰이 없는 경우, 쿠키에서 리프레시 토큰과 provider 정보 추출
             String cookieRefreshToken = null;
             String provider = null;
 
@@ -64,16 +70,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             }
+            // 리프레시 토큰이 존재하는 경우
             if(cookieRefreshToken != null) {
+                // 리프레시 토큰에서 사용자 이름 추출
                 String username = jwtTokenProvider.getUserName(cookieRefreshToken);
                 String accessToken = null;
 
+                // Redis에 저장된 리프레시 토큰과 쿠키의 토큰이 일치하는지 확인
                 boolean checkRefreshToken = provider != null ? jwtTokenProvider.checkRefreshTokenBetweenCookieAndRedis(username, provider, cookieRefreshToken)
                         : jwtTokenProvider.checkRefreshTokenBetweenCookieAndRedis(username, cookieRefreshToken);
 
+                // 리프레시 토큰이 유효하고 일치하는 경우
                 if (checkRefreshToken) {
                     if (jwtTokenProvider.validateToken(cookieRefreshToken)) {
+
+                        // 리프레시 토큰으로부터 사용자 정보 추출
                         CustomUserDetails customUserDetails = (CustomUserDetails) jwtTokenProvider.getAuthentication(cookieRefreshToken).getPrincipal();
+
+                        // 이메일 기반 사용자와 게스트 사용자 구분
                         if(username.contains("@")){
                             accessToken = jwtTokenProvider.createAccessToken(provider == null ? customUserDetails.getUserEmail() : customUserDetails.getMemberSocialEmail());
                             jwtTokenProvider.createRefreshToken(provider == null ? customUserDetails.getUserEmail() : customUserDetails.getMemberSocialEmail());
@@ -82,6 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             jwtTokenProvider.createRefreshToken(customUserDetails.getGuestOrderNumber());
                         }
 
+                        // 새로 발급한 액세스 토큰을 응답 헤더에 설정하고 현재 URI로 리다이렉트
                         response.setHeader("Authorization", "Bearer " + accessToken);
                         response.sendRedirect(request.getRequestURI());
                         return;

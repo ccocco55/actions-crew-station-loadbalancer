@@ -100,7 +100,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 ////        purchaseDTO.setSections(sections);
 //        return purchaseDTO;
 //    }
-
+    @Override
+    @LogReturnStatus
     public PurchaseDTO getPurchase(Long id) {
         // 캐시 먼저 확인
         log.info(":::::::::::::::{}",purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + id));
@@ -168,9 +169,6 @@ public class PurchaseServiceImpl implements PurchaseService {
             }
 
         });
-        if(purchaseRedisTemplate.opsForValue().get("purchase::purchases_" + purchaseDTO.getPostId()) !=null){
-            purchaseRedisTemplate.delete("purchase::purchases_" + purchaseDTO.getPostId());
-        }
         if(redisTemplate.opsForValue().get("gifts") !=null){
             redisTemplate.delete("gifts");
         }

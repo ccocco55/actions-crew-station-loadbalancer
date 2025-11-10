@@ -25,4 +25,5 @@ public class ReportPostDTO {
     private String writerEmail;
     private String writerSocialEmail;
     private ProcessStatus processStatus;
+    private String accompanyStatus;
 }

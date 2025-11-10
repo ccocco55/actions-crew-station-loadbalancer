@@ -2,9 +2,7 @@ package com.example.crewstation.repository.diary;
 
 import com.example.crewstation.common.enumeration.Secret;
 import com.example.crewstation.domain.diary.DiaryVO;
-import com.example.crewstation.dto.diary.DiaryDTO;
-import com.example.crewstation.dto.diary.LikedDiaryDTO;
-import com.example.crewstation.dto.diary.ReplyDiaryDTO;
+import com.example.crewstation.dto.diary.*;
 import com.example.crewstation.mapper.diary.DiaryMapper;
 import com.example.crewstation.util.Criteria;
 import com.example.crewstation.util.ScrollCriteria;
@@ -25,9 +23,9 @@ public class DiaryDAO {
     private final DiaryMapper diaryMapper;
 
     //    다이어리 목록 조회
-    public List<DiaryDTO> selectDiaryList(@Param("limit") int limit)
+    public List<DiaryDTO> selectDiaryList(Long memberId ,int limit)
     {
-        return diaryMapper.selectDiaryList(limit);
+        return diaryMapper.selectDiaryList(memberId ,limit);
     }
 
     // 특정 회원이 좋아요한 일기 목록 조회
@@ -107,5 +105,20 @@ public class DiaryDAO {
     //    memberId로 다이어리  조회
     public List<DiaryDTO>  findDiaryAllByMemberId(Long memberId){
         return diaryMapper.selectDiaryAllByMemberId(memberId);
+    }
+
+    // 나의 다이어리 목록 조회 (무한스크롤)
+    public List<MyDiaryDTO> findMyDiaryListByCriteria(Long memberId, ScrollCriteria criteria) {
+        return diaryMapper.selectMyDiaryListByCriteria(memberId,criteria);
+    }
+
+    //  나의 다이어리 개수
+    public int countMyDiariesByMemberId(Long memberId) {
+        return diaryMapper.countMyDiariesByMemberId(memberId);
+    }
+
+    //  좋아요 개수 게시
+    public String findLikeCountByPostId(Long postId){
+        return diaryMapper.selectLikeCountByPostId(postId);
     }
 }

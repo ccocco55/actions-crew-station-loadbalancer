@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +31,11 @@ public class FileDAO {
 //    파일 링크 삭제
     public FileDTO findById(Long id) {
         return fileMapper.selectOne(id);
+    }
+
+    //  멤버-파일 조회
+    public FileDTO findProfileByMemberId(Long memberId) {
+        return fileMapper.findProfileByMemberId(memberId);
     }
 
 }
