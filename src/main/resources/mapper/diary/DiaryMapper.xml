@@ -15,82 +15,129 @@
         </where>
     </sql>
     <select id="selectDiaryList">
-        select vpd.id as post_id,
-        vpd.created_datetime,
-        vpd.updated_datetime,
-        vpd.post_read_count,
-        vpd.diary_like_count,
-        vpd.diary_reply_count,
-        vfps.file_path as diary_file_path,
-        tm.member_name,
-        tm.id as member_id,
-        tm.member_description,
-        tm.social_img_url,
-        tps.post_content,
-        vfmf.file_path as member_file_path,
-        tc.crew_name,
-        tc.id as crew_id
-        from tbl_member tm
-        join view_post_diary vpd on tm.id = vpd.member_id
-        join tbl_post_section tps
-        on vpd.id = tps.post_id and vpd.post_status = 'active' and vpd.diary_secret = 'public'
-        join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
-        left join view_file_member_file vfmf on vfmf.member_id = tm.id
-        left join tbl_crew_diary tcd on tcd.diary_id = vpd.id
-        left join tbl_crew tc on tcd.crew_id = tc.id
+        select
+            x.post_id,
+            x.created_datetime,
+            x.updated_datetime,
+            x.post_read_count,
+            x.diary_like_count,
+            x.diary_reply_count,
+            x.diary_file_path,
+            x.member_name,
+            x.member_id,
+            x.member_description,
+            x.social_img_url,
+            x.post_content,
+            x.member_file_path,
+            x.crew_name,
+            x.crew_id,
+            x.check
+        from (
+                 select
+                     vpd.id as post_id,
+                     vpd.created_datetime,
+                     vpd.updated_datetime,
+                     vpd.post_read_count,
+                     vpd.diary_like_count,
+                     vpd.diary_reply_count,
+                     vfps.file_path as diary_file_path,
+                     tm.member_name,
+                     tm.id as member_id,
+                     tm.member_description,
+                     tm.social_img_url,
+                     tps.post_content,
+                     vfmf.file_path as member_file_path,
+                     tc.crew_name,
+                     tc.id as crew_id,
 
-        where vpd.diary_secret = 'public'
-        order by vpd.created_datetime desc
-        limit 4;
+                     exists (
+                         select 1
+                         from tbl_like me
+                         where me.post_id  = vpd.id
+                           and me.member_id = #{memberId}
+                     ) as check,
+          row_number() over (
+              partition by tm.id
+              order by vpd.created_datetime desc, vpd.id desc, tps.id asc
+          ) as rn
+                 from tbl_member tm
+                     join view_post_diary vpd on tm.id = vpd.member_id
+                     join tbl_post_section tps
+                     on vpd.id = tps.post_id
+                     and vpd.post_status = 'active'
+                     and vpd.diary_secret = 'public'
+                     join view_file_post_section_file vfps
+                     on tps.id = vfps.post_section_id
+                     and vfps.image_type = 'main'
+                     left join view_file_member_file vfmf on vfmf.member_id = tm.id
+                     left join tbl_crew_diary tcd on tcd.diary_id = vpd.id
+                     left join tbl_crew tc on tcd.crew_id = tc.id
+                 where vpd.diary_secret = 'public'
+             ) x
+        where x.rn = 1
+        order by x.created_datetime desc
+        limit 4
     </select>
 
+
+
+
+
+
     <!-- 내가 좋아요 한 일기 -->
-    <select id="findDiariesLikedByMemberId" resultType="com.example.crewstation.dto.diary.LikedDiaryDTO">
-        SELECT d.post_id AS postId,
-               p.post_title,
-               m.id            AS memberId,
-               m.member_name   AS memberName,
-               m.social_img_url AS memberProfileImage,
-
-               f.file_path AS mainImage,
-
-               (SELECT ps.post_content
-                FROM tbl_post_section ps
-                WHERE ps.post_id = p.id
-                ORDER BY ps.id ASC
-                LIMIT 1) AS content,
-
-               d.diary_like_count,
-               d.diary_reply_count,
-
-               1 AS liked
+    <select id="findDiariesLikedByMemberId">
+        SELECT
+        d.post_id        AS postId,
+        p.post_title,
+        m.id             AS memberId,
+        m.member_name    AS memberName,
+        COALESCE(fm.file_path, m.social_img_url) AS memberProfileImage,
+        pf.file_path      AS mainImage,
+        (SELECT ps.post_content
+        FROM tbl_post_section ps
+        WHERE ps.post_id = p.id
+        ORDER BY ps.id ASC
+        LIMIT 1) AS content,
+        d.diary_like_count,
+        d.diary_reply_count,
+        1 AS liked
         FROM tbl_like l
-                 JOIN tbl_post p ON l.post_id = p.id
-                 JOIN tbl_diary d ON d.post_id = p.id
-                 JOIN tbl_member m ON p.member_id = m.id
-                 LEFT JOIN (
-            SELECT ps.post_id, COALESCE(main.file_id, sub.first_file_id) AS first_file_id
-            FROM tbl_post_section ps
-                     LEFT JOIN (
-                SELECT psf.post_section_id, MIN(f.id) AS file_id
-                FROM tbl_post_section_file psf
-                         JOIN tbl_file f ON psf.file_id = f.id
-                WHERE psf.image_type = 'main'
-                GROUP BY psf.post_section_id
-            ) main ON ps.id = main.post_section_id
-                     LEFT JOIN (
-                SELECT psf.post_section_id, MIN(f.id) AS first_file_id
-                FROM tbl_post_section_file psf
-                         JOIN tbl_file f ON psf.file_id = f.id
-                WHERE psf.image_type = 'sub'
-                GROUP BY psf.post_section_id
-            ) sub ON ps.id = sub.post_section_id
+        JOIN tbl_post  p ON l.post_id = p.id
+        JOIN tbl_diary d ON d.post_id = p.id
+        JOIN tbl_member m ON p.member_id = m.id
+
+        <!-- 회원이 직접 업로드한 프로필 이미지 -->
+        LEFT JOIN tbl_member_file mf ON m.id = mf.member_id
+        LEFT JOIN tbl_file fm ON mf.file_id = fm.id
+
+        <!-- 다이어리의 메인 이미지 -->
+        LEFT JOIN (
+        SELECT ps.post_id, COALESCE(main.file_id, sub.first_file_id) AS first_file_id
+        FROM tbl_post_section ps
+        LEFT JOIN (
+        SELECT psf.post_section_id, MIN(f.id) AS file_id
+        FROM tbl_post_section_file psf
+        JOIN tbl_file f ON psf.file_id = f.id
+        WHERE psf.image_type = 'main'
+        GROUP BY psf.post_section_id
+        ) main ON ps.id = main.post_section_id
+        LEFT JOIN (
+        SELECT psf.post_section_id, MIN(f.id) AS first_file_id
+        FROM tbl_post_section_file psf
+        JOIN tbl_file f ON psf.file_id = f.id
+        WHERE psf.image_type = 'sub'
+        GROUP BY psf.post_section_id
+        ) sub ON ps.id = sub.post_section_id
         ) sec_file ON p.id = sec_file.post_id
-                 LEFT JOIN tbl_file f ON sec_file.first_file_id = f.id
+        LEFT JOIN tbl_file pf ON sec_file.first_file_id = pf.id
+
         WHERE l.member_id = #{memberId}
+        AND d.diary_secret = 'public'
+        AND p.post_status = 'active'
         ORDER BY l.id DESC
         LIMIT #{criteria.size} OFFSET #{criteria.offset}
     </select>
+
 
     <!-- 좋아요 취소 -->
     <delete id="deleteLike">
@@ -102,8 +149,12 @@
     <!-- 내가 좋아요 한 일기 개수 -->
     <select id="countDiariesLikedByMemberId" parameterType="long" resultType="int">
         SELECT COUNT(*)
-        FROM tbl_like
-        WHERE member_id = #{memberId}
+        FROM tbl_like l
+        JOIN tbl_diary d ON l.post_id = d.post_id
+        JOIN tbl_post p ON d.post_id = p.id
+        WHERE l.member_id = #{memberId}
+        AND d.diary_secret = 'public'
+        AND p.post_status = 'active'
     </select>
 
     <select id="findLikeId" resultType="long">
@@ -115,42 +166,50 @@
     </delete>
 
     <!-- 내가 댓글 단 일기 조회 -->
-    <select id="selectReplyDiariesByMemberId" resultType="com.example.crewstation.dto.diary.ReplyDiaryDTO">
+    <select id="selectReplyDiariesByMemberId">
         SELECT
-            p.id                   AS postId,
-            p.post_title           AS postTitle,
-            (
-                SELECT ps.post_content
-                FROM tbl_post_section ps
-                WHERE ps.post_id = p.id
-                ORDER BY ps.id ASC
-                LIMIT 1
-            ) AS content,
-            (
-                SELECT f.file_path
-                FROM tbl_post_section_file psf
-                         JOIN tbl_file f ON psf.file_id = f.id
-                WHERE psf.post_section_id IN (
-                    SELECT id FROM tbl_post_section WHERE post_id = p.id
-                )
-                  AND psf.image_type = 'main'
-                LIMIT 1
-            ) AS mainImage,
-            r.reply_content        AS replyContent,
-            r.created_datetime     AS createdDatetime
+        p.id            AS postId,
+        p.post_title    AS postTitle,
+        (
+        SELECT ps.post_content
+        FROM tbl_post_section ps
+        WHERE ps.post_id = p.id
+        ORDER BY ps.id ASC
+        LIMIT 1
+        ) AS content,
+        (
+        SELECT f.file_path
+        FROM tbl_post_section_file psf
+        JOIN tbl_file f ON psf.file_id = f.id
+        WHERE psf.post_section_id IN (
+        SELECT id FROM tbl_post_section WHERE post_id = p.id
+        )
+        AND psf.image_type = 'main'
+        LIMIT 1
+        ) AS mainImage,
+        r.reply_content    AS replyContent,
+        r.created_datetime AS createdDatetime
         FROM tbl_reply r
-                 JOIN tbl_diary d ON r.diary_id = d.post_id
-                 JOIN tbl_post p  ON d.post_id = p.id
+        JOIN tbl_diary d ON r.diary_id = d.post_id
+        JOIN tbl_post  p ON d.post_id = p.id
         WHERE r.member_id = #{memberId}
+        AND d.diary_secret = 'public'
+        AND p.post_status = 'active'
         GROUP BY p.id, r.reply_content, r.created_datetime
         ORDER BY r.created_datetime DESC
         LIMIT #{criteria.size} OFFSET #{criteria.offset}
     </select>
 
+
+    <!-- 내가 댓글 단 일기 개수 -->
     <select id="countReplyDiariesByMemberId" resultType="int">
         SELECT COUNT(*)
         FROM tbl_reply r
+        JOIN tbl_diary d ON r.diary_id = d.post_id
+        JOIN tbl_post p ON d.post_id = p.id
         WHERE r.member_id = #{memberId}
+        AND d.diary_secret = 'public'
+        AND p.post_status = 'active'
     </select>
 
 
@@ -223,7 +282,11 @@
         values (#{postId}, #{diarySecret})
     </insert>
 
-
+    <select id="selectLikeCountByPostId">
+        select diary_like_count
+        from tbl_diary
+        where post_id = #{postId}
+    </select>
     <select id="selectByPostId">
         select tm.id  as member_id,
                tm.member_name,
@@ -234,7 +297,6 @@
                vpd.created_datetime,
                vpd.updated_datetime,
                vpd.diary_secret,
-               vpd.diary_like_count,
                vpd.diary_reply_count,
                vfmf.file_path as member_file_path,
                tc.crew_name,
@@ -297,5 +359,56 @@
                  left join tbl_crew_diary tcd on tcd.diary_id = vpd.id
                  left join tbl_crew tc on tcd.crew_id = tc.id
         where tm.id=#{memberId} and vpd.diary_secret = 'public'
+    </select>
+
+    <!-- 나의 다이어리 목록 조회 -->
+    <select id="selectMyDiaryListByCriteria">
+        SELECT
+            d.post_id AS postId,
+            p.member_id AS memberId,
+            p.post_title AS postTitle,
+            (
+                SELECT s2.post_content
+                FROM tbl_post_section s2
+                         JOIN tbl_post_section_file psf2 ON s2.id = psf2.post_section_id
+                WHERE s2.post_id = p.id
+                  AND psf2.image_type = 'main'
+                ORDER BY s2.id ASC
+                LIMIT 1
+            ) AS postContent,
+            (
+                SELECT f.file_path
+                FROM tbl_post_section s3
+                         JOIN tbl_post_section_file psf3 ON s3.id = psf3.post_section_id
+                         JOIN tbl_file f ON psf3.file_id = f.id
+                WHERE s3.post_id = p.id
+                  AND psf3.image_type = 'main'
+                ORDER BY s3.id ASC
+                LIMIT 1
+            ) AS mainImage,
+
+            p.created_datetime AS createdDatetime,
+            p.updated_datetime AS updatedDatetime
+
+        FROM
+            tbl_diary d
+                JOIN tbl_post p ON d.post_id = p.id
+
+        WHERE
+            p.member_id = #{memberId}
+
+        ORDER BY
+            p.created_datetime DESC
+
+        LIMIT #{criteria.size} OFFSET #{criteria.offset}
+    </select>
+
+    <!-- 나의 다이어리 총 개수 조회 -->
+    <select id="countMyDiariesByMemberId">
+        SELECT COUNT(*)
+        FROM
+            tbl_diary d
+                JOIN tbl_post p ON d.post_id = p.id
+        WHERE member_id = #{memberId}
     </select>
 </mapper>

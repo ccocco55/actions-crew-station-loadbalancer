@@ -71,7 +71,17 @@ const memberService = (() => {
         }
     }
 
+    const resetCookies = async () => {
+        const response = await fetch('/api/auth/reset-cookies', {
+            method: 'POST',
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || "Fetch error");
+        }
+    }
 
 
-    return {login: login, guestLogin:guestLogin, refresh: refresh, logout: logout, info: info};
+
+    return {login: login, guestLogin:guestLogin, refresh: refresh, logout: logout, info: info, resetCookies: resetCookies};
 })();

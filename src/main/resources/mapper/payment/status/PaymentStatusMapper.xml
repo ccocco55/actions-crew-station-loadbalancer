@@ -69,43 +69,42 @@
 
     <select id="selectPayment">
         select
-            ps.id                               as id,
-            ps.payment_phase                    as paymentPhase,
-            ps.purchase_id                      as purchaseId,
-            ps.member_id                        as memberId,
+        ps.id                               as id,
+        ps.payment_phase                    as paymentPhase,
+        ps.purchase_id                      as purchaseId,
+        ps.member_id                        as memberId,
 
-            to_char(p.created_datetime, 'YYYY-MM-DD HH24:MI:SS') as paidAt,
-            to_char(p.updated_datetime, 'YYYY-MM-DD HH24:MI:SS') as updatedDatetime,
+        to_char(p.created_datetime, 'YYYY-MM-DD HH24:MI:SS') as paidAt,
+        to_char(p.updated_datetime, 'YYYY-MM-DD HH24:MI:SS') as updatedDatetime,
 
-            vpp.post_title                      as productName,
-            coalesce(vpp.purchase_product_price, 0) * coalesce(vpp.purchase_product_count, 0) as amount,
+        vpp.post_title                      as productName,  <!-- ✅ 하나만 남김 -->
+        coalesce(vpp.purchase_product_price, 0) * coalesce(vpp.purchase_product_count, 0) as amount,
 
-            b.member_name                   as buyerName,
-            b.member_phone                  as buyerPhone,
-            b.member_email                  as buyerEmail,
+        b.member_name                       as buyerName,
+        b.member_phone                      as buyerPhone,
+        b.member_email                      as buyerEmail,
 
-            s.member_name                  as sellerName,
-            s.member_phone                 as sellerPhone,
-            s.member_email                 as sellerEmail,
+        s.member_name                       as sellerName,
+        s.member_phone                      as sellerPhone,
+        s.member_email                      as sellerEmail,
 
-            vpp.purchase_delivery_method        as deliveryType
+        vpp.purchase_delivery_method        as deliveryType
 
         from tbl_payment_status ps
-
-                 left join tbl_payment p
-                           on p.payment_status_id = ps.id
-                 left join view_post_purchase vpp
-                           on vpp.id = ps.purchase_id
-                 left join tbl_member b
-                           on b.id = ps.member_id
-                 left join tbl_member s
-                           on s.id = vpp.member_id
+        left join tbl_payment p
+        on p.payment_status_id = ps.id
+        left join view_post_purchase vpp
+        on vpp.id = ps.purchase_id
+        left join tbl_member b
+        on b.id = ps.member_id
+        left join tbl_member s
+        on s.id = vpp.member_id
         <include refid="searchWhere"/>
 
         order by p.created_datetime desc
-
-        LIMIT #{criteria.rowCount} OFFSET #{criteria.offset}
+        limit #{criteria.rowCount} offset #{criteria.offset}
     </select>
+
 
 
     <select id="selectPaymentDetail">
@@ -118,21 +117,20 @@
             to_char(p.created_datetime, 'YYYY-MM-DD HH24:MI:SS') as paidAt,
             to_char(p.updated_datetime, 'YYYY-MM-DD HH24:MI:SS') as updatedDatetime,
             to_char(vpp.created_datetime, 'YYYY-MM-DD HH24:MI:SS') AS listedAt,
-            concat(ta.address, ' ', ta.address_detail) as address,
-            coalesce(vpp.purchase_product_price, 0) * coalesce(vpp.purchase_product_count, 0) as amount,
 
+            concat_ws(' ', ta.address, ta.address_detail)          as address,
+            coalesce(vpp.purchase_product_price, 0) * coalesce(vpp.purchase_product_count, 0) as amount,
 
             b.member_name                   as buyerName,
             b.member_phone                  as buyerPhone,
             b.member_email                  as buyerEmail,
 
-            s.member_name                  as sellerName,
-            s.member_phone                 as sellerPhone,
-            s.member_email                 as sellerEmail,
+            s.member_name                   as sellerName,
+            s.member_phone                  as sellerPhone,
+            s.member_email                  as sellerEmail,
 
-            ta.address_detail               as addressDetail,
-
-            vpp.purchase_delivery_method        as deliveryType
+            vpp.purchase_delivery_method    as deliveryType,
+            vpp.post_title                  as productName
 
         from tbl_payment_status ps
                  left join tbl_payment p
@@ -144,7 +142,9 @@
                  left join tbl_member s
                            on s.id = vpp.member_id
                  left join lateral (
-            select address, address_detail
+            select
+                address,
+                address_detail
             from tbl_address
             where member_id = b.id
             order by updated_datetime desc
@@ -152,9 +152,11 @@
             ) ta on true
 
         where ps.id = #{id}
-        order by ps.id, p.updated_datetime desc nulls last , p.created_datetime desc nulls last
+        order by ps.id, p.updated_datetime desc nulls last, p.created_datetime desc nulls last
         limit 1
     </select>
+
+
 
     <select id="selectPaymentSummary">
         select

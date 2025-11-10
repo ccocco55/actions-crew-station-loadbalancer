@@ -570,7 +570,7 @@ input, textarea, select {
 #mention-name {
     margin-left: 8px;
     text-align: left;
-    display: flex;
+    display: block;
     align-items: center;
     font-size: 11px;
     line-height: 18px;

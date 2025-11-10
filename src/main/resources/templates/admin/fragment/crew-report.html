@@ -1,170 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrewStation</title>
-    <link rel="stylesheet" href="/css/admin/crew-report.css">
-    <link rel="stylesheet" href="/css/admin/font.css">
-    <link rel="shortcut icon" href="../../../static/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/admin/sidebar.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
-</head>
-<body>
-    <div id= "bootpay">
-        <div class="boot-notify-container"></div>
-        <div class="popup-manager" style="width: 0px;"></div>
-        <aside id="bootpay-side">
-            <div class="d-flex flex-column" id="side-wrapper">
-                <div class="side-header">
-                    <div class="app-wrapper">
-                        <div class="provider-name hover-spin">
-                            <span class="comp-provider-name">
-                                <span class="pn-name">CrewStation</span>
-                            </span>
-                        </div>
-                        <a class="app-name d-flex justify-content-between align-items-center">
-                            <span>CrewStation</span>
-                            <i class="mdi mdi-apps">
-                            </i>
-                        </a>
-                    </div>
-                </div>
-                <div class="menu-wrapper flex-grow-1">
-                    <ul class="menu-list">
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
-                                <span class="menu-name">HOME</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column open">
-                            <a class="menu-btn d-flex w-100" data-toggle="collapse" >
-                                <span class="menu-name">회원관리</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column open">
-                          <a class="menu-btn d-flex w-100" data-toggle="collapse" >
-                              <span class="menu-name">크루관리</span>
-                              <div class="icon-wrapper flex-grow-1 text-right">
-                              </div>
-                          </a>
-                      </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <!-- 클릭 이벤트 -->
-                            <!-- 회원 목록 클릭 시 collipse 열고 닫기 이벤트 -->
-                            <a class="menu-btn d-flex w-100 " data-toggle="collapse" >
-                                <span class="menu-name">신고</span>
-                                <div class="icon-wrapper flex-grow-1 text-right">
-                                </div>
-                            </a>
-                            <ul class="menu-sub-list collapse" >
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link " data-param="0">
-                                        
-                                        다이어리
-                                    </a>
-                                </li>
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link" data-param="0">
-                                        
-                                        기프트
-                                    </a>
-                                </li>
-                                <li class="submenu menu-item ">
-                                    <a class="boot-link active" data-param="0">
-                                        
-                                        크루
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="boot-link menu-btn">
-                                <span class="menu-name">결제관리</span>
-                            </a>
-                            <ul class="menu-sub-list collapse " id="menu-60934308367997007c4c3d2c"></ul>
-                        </li>
-                        
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100"data-toggle="collapse">
-                                <span class="menu-name">문의</span>
-                                <div class="icon-wrapper flex-grow-1 text-right"></div>
-                            </a>  
-                        </li>
-                        <li class="menu menu-item d-flex flex-column">
-                            <a class="menu-btn d-flex w-100 "data-toggle="collapse">
-                                <span class="menu-name">배너관리</span>
-                                <div class="icon-wrapper flex-grow-1 text-right"></div>
-                            </a>  
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
-        <div id="bootpay-main"class="has-menu">
-            <div id="header-wrapper">
-                <div id="bootpay-header" class="d-flex trial-mode">
-                    <div class="flex-grow-1"></div>
-                    <div>
-                        <div class="header-menu-group d-flex">
-                            <a class="boot-link mr-3" href="">
-                                <div class="header-menu-btn " data-for="8598bfd3-1b35-4de3-a48f-9d6654dc0268" data-toggle="tooltip" data-custom-class title="공지사항">
-                                    <i class="mdi mdi-bullhorn-variant-outline">
-    
-                                    </i>
-    
-                                </div>
-                            </a>
-                            <div class="user-menu">
-                                <!-- 주석 아래에 show 유무로 메뉴가보임 -->
-                                <div id="usermenubtn"class="user-menu-wrapper d-flex align-items-center cursor-pointer" data-toggle="dropdown">
-                                    <div class="user-avatar">T</div>
-                                    <div class="user-menu-email">test@gamil.com</div>
-                                </div>
-                                <div id="usermenu" class="user-menu-content dropdown-menu dropdown-menu-right">
-                                    <ul class="menu-body list-unstyled">
-                                        <li>
-                                            <a class="boot-link d-block text-dark"href="">
-                                                <i class="mdi mdi-bell-outline mr-2 mdi-18px"></i>
-                                                회원가입
-                                                
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="d-block text-dark"href="">
-                                                <i class="mdi mdi-logout-variant mr-2 mdi-18px"></i>
-                                                로그아웃
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-    
-                        </div>
-    
-                    </div>
-    
-                </div>
-    
-            </div>
-        <div class="project-setting-index page">
+<div th:fragment="crew-report-page"
+     id="section-crew-report"
+     class="project-setting-index page"
+     style="display:none;">
             <div class="page-header">
                 <div class="page-title">크루 동행 신고목록</div>
-                <div class="page-subtitle">크루 동행 신고 관리</div>
+<!--                <div class="page-subtitle">크루 동행 신고 관리</div>-->
             </div>
             <div class="page-body">
                 <div class="tab-view">
                     <div class="tab-view-header">
                         <ul class="tab-switch-row list-unstyled report-tabs">
-                            <li><button type="button" class="tab-switch active" data-type="crew">크루</button></li>
-                            <li><button type="button" class="tab-switch" data-type="long">롱크루</button></li>
+                            <li><button type="button" class="tab-switch active" data-type="long">롱크루</button></li>
                             <li><button type="button" class="tab-switch" data-type="short">숏크루</button></li>
                           </ul>
-                        
+
                     </div>
                     <div class="tab-view-body">
                         <div class="tab-wrapper tab-project-setting-member">
@@ -179,94 +28,16 @@
                                             <i class="mdi mdi-help-circle-outline"></i>
                                           </span>
                                         </th>
-                                        <th>신고자</th>
+                                        <th style="text-align: center">
+                                            신고자
+                                        </th>
                                         <th class="text-center">신고일시</th>
                                         <th class="text-right">관리</th>
                                       </tr>
                                     </thead>
-                                  
-                                    <tbody>
-                                      <!-- : 대기중 -->
-                                      <tr data-type="crew" data-status="PENDING">
-                                        <td class="td-post">
-                                          <div class="post-title">크루모집</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48321</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-danger">욕설이나 비방이 심해요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@gmail.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 20:59:36</td>
-                                  
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                          
-                                          
-                                      </tr>
-                                  
-                                      <tr data-type="long" data-status="RESOLVED">
-                                        <td class="td-post">
-                                          <div class="post-title">롱크루 모집</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48377</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-warning">이 글로 도배 돼어있어요</span>
-                                          <span class="badge badge-label reason-badge text-danger">이 글이 도배 돼어 있어요
-                                          </span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@naver.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 21:10:22</td>
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                      </tr>
-                                      <tr data-type="short" data-status="PENDING">
-                                        <td class="td-post">
-                                          <div class="post-title">숏크루 모집</div>
-                                          <div class="post-meta">
-                                            <span class="meta">by <b>test</b></span>
-                                            <span class="dot">·</span>
-                                            <span class="meta">postId: 48377</span>
-                                          </div>
-                                        </td>
-                                        <td class="text-center">
-                                          <span class="badge badge-label reason-badge text-warning">이 글로 도배 돼어있어요</span>
-                                          <span class="badge badge-label reason-badge text-danger">욕설이나 비방이 심해요</span>
-                                        </td>
-                                        <td>
-                                          <div>reporter: <b>test</b></div>
-                                          <div class="text-muted">test@naver.com</div>
-                                        </td>
-                                        <td class="text-center text-muted">2025-08-03 21:10:22</td>
-                                        <td class="td-actions text-right">
-                                            <span class="approval-status status-badge status-pending">대기중</span>
-                                            <button class="btn btn-light-danger btn-sm action-btn view" title="상세보기">
-                                              <i class="mdi mdi-chevron-right"></i>
-                                            </button>
-                                          </td>
-                                      </tr>
-                                      
+
+                                    <tbody id="registerCrewReportList">
+                                    <!--            롱크루 신고 목록                   -->
                                     </tbody>
                                   </table>
                                   
@@ -329,15 +100,12 @@
                                       <!-- 관리 -->
                                       <div class="admin-actions">
                                         <label><input type="checkbox" class="cb-hide-post"> 게시글 숨김</label>
-                                        <label><input type="checkbox" class="cb-block-author"> 작성자 제한(일시)</label>
-                                        <label><input type="checkbox" class="cb-warn"> 경고 발송</label>
                                       </div>
                                     </div>
                               
                                     <div class="modal-footer report-footer">
-                                        <button class="btn outline btn-approve">처리</button>
-                                        <button class="btn primary btn-reject">반려</button>
-                                        <button class="btn soft btn-close">닫기</button>
+                                        <button type="button" class="btn outline btn-approve">처리</button>
+                                        <button type="button" class="btn soft btn-close">닫기</button>
                                       </div>
                                       
                                   </div>
@@ -350,9 +118,3 @@
             </div>
         </div>
 
-    </div>
-</div>
-</body>
-<script src="/static/js/admin/diary-report/event.js"></script>
-<script src="/static/js/admin/crew-report/event.js"></script>
-</html>

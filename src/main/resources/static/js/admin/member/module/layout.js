@@ -16,6 +16,13 @@ const memberLayout = (() => {
         detailId:      () => document.getElementById("memberDetailId"),
         detailPost:    () => document.getElementById("memberPostTbody"),
         detailComment: () => document.getElementById("memberCommentTbody"),
+        detailMbti:   () => document.getElementById("memberDetailMbti"),
+        detailBirth:  () => document.getElementById("memberDetailBirth"),
+        detailGender: () => document.getElementById("memberDetailGender"),
+        detailRecent: () => document.getElementById("memberDetailRecent"),
+        detailRole: () => document.getElementById("memberDetailRole"),
+
+
     };
 
     const openModal = () => {
@@ -157,10 +164,55 @@ const memberLayout = (() => {
         const statusEl = el.detailStatus?.();
         if (statusEl) {
             const raw = (result.memberStatus || result.status || "").toString().toLowerCase();
-            const active = raw === "active" || raw === "활동" || raw === "true" || raw === "1";
-            statusEl.textContent = active ? "활동 중" : "탈퇴";
-            statusEl.style.color = active ? "#507cf3" : "#fe657e";
+
+            const isActive =
+                raw === "active" ||
+                raw === "활동" ||
+                raw === "true" ||
+                raw === "1" ||
+                raw === "status.active";
+
+            statusEl.textContent = isActive ? "활동 중" : "탈퇴";
+            statusEl.style.color = isActive ? "#507cf3" : "#fe657e";
         }
+
+
+
+        const mbtiEl = el.detailMbti();
+        if (mbtiEl) mbtiEl.textContent = result.memberMbti ?? result.mbti ?? "-";
+
+        const birthEl = el.detailBirth();
+        if (birthEl) birthEl.textContent = result.memberBirth ?? result.birth ?? "-";
+
+        const genderEl = el.detailGender?.();
+        if (genderEl) {
+            const gender = (result.memberGender || "").toString().toLowerCase();
+            if (gender === "male") genderEl.textContent = "남";
+            else if (gender === "female") genderEl.textContent = "여";
+            else genderEl.textContent = "-";
+        }
+
+
+
+        const recentEl = el.detailRecent?.();
+        if (recentEl) {
+            recentEl.textContent = result.updatedDatetime
+                ? result.updatedDatetime
+                : "-";
+        }
+
+        const roleEl = el.detailRole?.();
+        if (roleEl) {
+            const role = (result.memberRole || "").toString().toLowerCase();
+            const map = {
+                admin: "관리자",
+                member: "일반 회원"
+            };
+            roleEl.textContent = map[role] || "-";
+        }
+
+
+
 
         const postTbody = el.detailPost();
         if (postTbody) {

@@ -1,24 +1,25 @@
-const alarms = document.querySelectorAll(".alarm-content-link");
+alarm.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-alarms.forEach(alarm => {
-    alarm.addEventListener("click", async (e) => {
-        e.preventDefault();
+    const alarmId = alarm.dataset.id;
+    const alarmType = alarm.dataset.type.toLowerCase();
+    const wrap = alarm.closest(".alarm-wrap");
 
-        const alarmId = alarm.dataset.id;
-        const alarmType = alarm.dataset.type;
+    // 중복 클릭 방지
+    if (wrap.classList.contains("loading")) return;
+    wrap.classList.add("loading");
 
-        try {
-            const response = await fetch(`/api/alarms/read?alarmType=${alarmType}&alarmId=${alarmId}`, {
-                method: "PUT"
-            });
+    try {
+        const response = await fetch(`/api/alarms/read?alarmType=${alarmType}&alarmId=${alarmId}`, {
+            method: "PUT"
+        });
 
-            if (response.ok) {
-                const wrap = alarm.closest(".alarm-wrap");
-                wrap.classList.remove("unread");
-                wrap.classList.add("read");
-            }
-        } catch (err) {
-            console.error("읽음 처리 실패:", err);
+        if (response.ok) {
+            wrap.classList.remove("unread", "loading");
+            wrap.classList.add("read");
         }
-    });
+    } catch (err) {
+        console.error("읽음 처리 실패:", err);
+        wrap.classList.remove("loading");
+    }
 });

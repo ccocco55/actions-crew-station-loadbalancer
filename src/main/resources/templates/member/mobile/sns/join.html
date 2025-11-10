@@ -66,6 +66,26 @@
                         </div>
                     </div>
                     <div class="form-section">
+                        <label class="form-label member-phone-label essential">휴대전화</label>
+                        <div class="phone-wrap form-wrap">
+                            <div class="input-group phone-input">
+                                <span class="phone-input-local form-input-local">
+                                    <input type="text" name="memberPhone" class="form-control essential phone" size="1" placeholder="휴대전화" th:field="*{memberPhone}">
+                                    <button type="button" class="phone-certification" disabled>전송</button>
+                                    <br>
+                                    <div class="phone-check" style="display: none;">
+                                        <input type="text" class="form-control essential code" size="1" placeholder="인증번호">
+                                        <div class="limit-time" style="color:rgb(255, 119, 119)">5:00</div>
+                                        <button type="button" class="code-check" disabled>확인</button>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="error-text-wrap error-text-phone">
+                                <span>필수 입력 항목입니다.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
                         <label class="form-label member-email-label essential">이메일</label>
                         <div class="email-wrap form-wrap">
                             <div class="input-group email-input">

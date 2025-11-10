@@ -224,7 +224,7 @@ a {
     color: rgb(47, 52, 56);
 }
 
-.sticky-container {
+.m-sticky-container {
     position: sticky;
     top: 81px;
     transition: top 0.1s;
@@ -639,3 +639,71 @@ nav {
     font-size: 15px;
     color: #757575;
 }
+
+.diary-div {
+    position: relative;
+    overflow: hidden;
+}
+
+/* hover 시 반투명 회색 배경 */
+.diary-div::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease;
+    z-index: 1;
+}
+
+.diary-div:hover::before {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 제목/내용 기본 숨김 */
+.diary-title,
+.diary-content {
+    position: absolute;
+    z-index: 2;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 제목 위치 */
+.diary-title {
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+    width: 80%;
+}
+
+/* 내용 위치 */
+.diary-content {
+    bottom: 15%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+    width: 85%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* hover 시 텍스트 등장 */
+.diary-div:hover .diary-title,
+.diary-div:hover .diary-content {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+
+/* hover 시 기존 태그 제거 */
+.diary-div:hover .tag-span {
+    display: none;
+}
+

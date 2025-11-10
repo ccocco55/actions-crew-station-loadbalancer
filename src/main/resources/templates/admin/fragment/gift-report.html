@@ -22,8 +22,15 @@
                             <thead>
                             <tr>
                                 <th>게시글 / 작성자</th>
-                                <th class="text-center">신고사유</th>
-                                <th>신고자</th>
+                                <th class="text-center">
+                                    신고사유
+                                    <span class="icon-wrapper cursor-pointer ml-1 text-primary">
+                                            <i class="mdi mdi-help-circle-outline"></i>
+                                          </span>
+                                </th>
+                                <th style="text-align: center">
+                                    신고자
+                                </th>
                                 <th class="text-center">신고일시</th>
                                 <th class="text-right">관리</th>
                             </tr>
@@ -54,6 +61,7 @@
                                         <tbody>
                                         <tr>
                                             <th>신고사유</th>
+
                                             <td><span data-bind="reason">욕설이나 비방이 심해요</span></td>
                                         </tr>
                                         <tr>

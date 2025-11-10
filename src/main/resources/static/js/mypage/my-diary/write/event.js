@@ -804,9 +804,12 @@ complteBtn.addEventListener("click", (e) => {
         toastModal("나라를 추가해줴요.")
         return;
     }
-    countries.forEach((country,countryIndex) => {
+    let countryIndex = 0;
+    countries.forEach((country) => {
+        if (country.dataset.countryId) return;
+        console.log(country)
         const countryInput = document.createElement("input");
-        countryInput.name = `countries[${countryIndex}]`;
+        countryInput.name = `countries[${countryIndex++}]`;
         countryInput.value = country.textContent;
         form.appendChild(countryInput);
     });

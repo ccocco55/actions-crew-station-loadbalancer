@@ -1,3 +1,5 @@
+memberService.resetCookies();
+
 // 일반 회원, 게스트 회원 구분 버튼에 따라 폼 태그 바꿔주기
 const memberDivision = document.querySelector("div.login-part-btn");
 

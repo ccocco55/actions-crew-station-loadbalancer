@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,24 +18,22 @@
         <nav class="page-navigation">
             <ul>
                 <li class="page-navigation__item"><a href="/mypage/diary-list">나의 다이어리</a></li>
-                <li class="page-navigation__item"><a href="/mypage/findMyCrew">나의 크루 구하기</a></li>
-                <li class="page-navigation__item"><a href="/mypage/crew-list">나의 크루 목록</a></li>
                 <li class="page-navigation__item"><a href="/mypage/my-activities">나의 활동</a></li>
                 <li class="page-navigation__item"><a href="/mypage/purchase-list">나의 구매 내역</a></li>
                 <li class="page-navigation__item"><a href="/mypage/sale-list">나의 판매 내역</a></li>
-                <li class="page-navigation__item"><a href="/mypage/inquiries">나의 문의</a></li>
                 <li class="page-navigation__item"><a href="/mypage/modify" class="active">나의 프로필</a></li>
             </ul>
         </nav>
     </div>
 
     <main class="main">
-        <form class="modify-form">
+        <form class="modify-form" th:action="@{/mypage/modify}" method="post" enctype="multipart/form-data">
+
             <!-- 프로필 이미지 -->
             <div class="modify">
                 <label for="profile" class="modify-label">
-                    <img class="profile-img"
-                         src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c"
+                    <img th:src="${modifyDTO.memberProfileImg != null ? modifyDTO.memberProfileImg :
+                                'https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c'}"
                          alt="프로필 이미지">
                     <div class="photo-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" fill="#FFFFFF" viewBox="0 0 12 12">
@@ -44,7 +42,7 @@
                                   clip-rule="evenodd"></path>
                         </svg>
                     </div>
-                    <input type="file" class="img-input" id="profile">
+                    <input type="file" name="profileFile" class="img-input" id="profile">
                 </label>
             </div>
 
@@ -53,7 +51,9 @@
                 <div class="email-input">
                     <label class="email-label">이메일</label>
                     <div class="email-div">
-                        <input type="text" class="input-email input-input" readonly>
+                        <input type="text" name="memberEmail"
+                               th:value="${modifyDTO.memberEmail}"
+                               class="input-email input-input" readonly>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,9 @@
             <div class="input-title">
                 <label class="name">이름</label>
                 <div class="name-input">
-                    <input type="text" class="read-name" disabled>
+                    <input type="text" name="memberName"
+                           th:value="${modifyDTO.memberName}"
+                           class="read-name" disabled>
                 </div>
             </div>
 
@@ -70,10 +72,9 @@
             <div class="input-title">
                 <label class="birth">생년월일</label>
                 <div class="birth-input">
-                    <input type="text" class="birth-name input-input" placeholder="예: 20001202">
-                </div>
-                <div class="error-text-wrap error-text-birth">
-                    <span>필수 입력 항목입니다.</span>
+                    <input type="text" class="birth-name input-input"
+                           name="memberBirth"
+                           th:value="${modifyDTO.memberBirth}">
                 </div>
             </div>
 
@@ -87,20 +88,12 @@
                         <span class="phone-input-local form-input-local">
                             <div class="phone-number">
                                 <input type="text" name="memberPhone"
+                                       th:value="${modifyDTO.memberPhone}"
                                        class="form-control essential phone input-input"
                                        placeholder="휴대폰 번호">
                             </div>
-                            <button type="button" class="phone-certification" disabled>변경</button>
-                            <div class="phone-check" style="display: none;">
-                                <input type="text" class="form-control essential code input-input" placeholder="인증번호">
-                                <div class="limit-time" style="color:rgb(255, 119, 119)">5:00</div>
-                                <button type="button" class="code-check" disabled>확인</button>
-                            </div>
                         </span>
                     </div>
-                </div>
-                <div class="error-text-wrap error-text-phone">
-                    <span>필수 입력 항목입니다.</span>
                 </div>
             </div>
 
@@ -108,17 +101,23 @@
             <div class="input-title">
                 <label class="birth">주소</label>
                 <div class="address-code">
-                    <input type="text" class="address-code input-input" placeholder="우편번호">
-                    <button type="button" class="certification">주소찾기</button>
+                    <input type="text" id="zipCode" name="zipCode"
+                           class="address-code input-input"
+                           th:value="${modifyDTO.zipCode}"
+                           placeholder="우편번호">
+                    <button type="button" id="addressBtn" class="certification">주소변경</button>
                 </div>
                 <div class="address">
-                    <input type="text" class="address input-input" placeholder="주소">
+                    <input type="text" id="addressInput" name="address"
+                           class="address input-input"
+                           th:value="${modifyDTO.address}"
+                           placeholder="주소">
                 </div>
                 <div class="address-detail">
-                    <input type="text" class="address-detail input-input" placeholder="상세주소">
-                </div>
-                <div class="error-text-wrap error-text-phone">
-                    <span>필수 입력 항목입니다.</span>
+                    <input type="text" id="detailAddress" name="addressDetail"
+                           class="address-detail input-input"
+                           th:value="${modifyDTO.addressDetail}"
+                           placeholder="상세주소">
                 </div>
             </div>
 
@@ -128,13 +127,16 @@
             <div class="input-title">
                 <label class="puls">SNS 링크</label>
                 <div class="password-check-input">
-                    <input type="text" class="password-check" placeholder="https://www.example.com">
+                    <input type="text" name="memberSocialUrl"
+                           class="password-check"
+                           th:value="${modifyDTO.memberSocialUrl}"
+                           placeholder="https://www.example.com">
                 </div>
             </div>
 
             <!-- 탈퇴 버튼 -->
             <div class="inactive">
-                탈퇴하기
+                <button id="deleteBtn" type="button" class="delete-link">탈퇴하기</button>
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" fill="currentColor" viewBox="0 0 12 12">
                     <path fill-rule="evenodd"
                           d="M3.551 1.151a.6.6 0 0 0 .05.847l4.496 3.996L3.6 9.99a.6.6 0 0 0 .798.897l4.58-4.07a1.1 1.1 0 0 0 0-1.645l-4.58-4.07a.6.6 0 0 0-.848.05"
@@ -142,13 +144,27 @@
                 </svg>
             </div>
 
-            <button class="submit">완료</button>
+            <!-- 탈퇴 모달 -->
+            <div class="modal" id="deleteModal">
+                <div class="modal-content">
+                    <h3>정말 크루스테이션을 탈퇴하시겠어요?</h3>
+                    <p>탈퇴 시 회원 정보가 삭제되며,<br>
+                    작성하신 글과 댓글은 자동으로 삭제되지 않습니다.</p>
+                    <div class="modal-buttons">
+                        <a href="/mypage/delete/confirm" class="confirm">예, 탈퇴합니다</a>
+                        <button type="button" class="cancel">취소</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit">완료</button>
         </form>
     </main>
 </div>
 
 <footer th:replace="~{fixed/web/footer :: footer}"></footer>
 
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/js/fixed/web/header/module/service.js"></script>
 <script src="/js/fixed/web/header/event.js"></script>
 <script src="/js/mypage/modify/module/service.js"></script>

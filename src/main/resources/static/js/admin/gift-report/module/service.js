@@ -1,6 +1,7 @@
 const giftReportService = (() => {
     const getReports = async (page = 1) => {
-        const res = await fetch(`/api/admin/gifts?page=${page}`, { credentials: 'include' });
+        const res = await fetch(`/api/admin/gifts?page=${page}`,
+            { credentials: 'include' });
         if (!res.ok) {
             console.error('신고 목록 로드 실패');
             return [];

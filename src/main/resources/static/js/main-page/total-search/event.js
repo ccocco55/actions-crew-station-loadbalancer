@@ -1,26 +1,11 @@
-// 크루 리스트 슬라이드 부분
-const crewList = document.querySelector(".crew-items");
-const crewRightBtn = document.querySelector(".crew-arrow-btn-wrap-right");
-const crewLeftBtn = document.querySelector(".crew-arrow-btn-wrap-left");
-
-console.log(crewLeftBtn);
-const displayBtn = (displayTag, noneTag) => {
-    displayTag.style.display = "block";
-    noneTag.style.display = "none";
-};
-crewRightBtn.addEventListener("click", (e) => {
-    crewList.style.transition = `transform 0.5s`;
-    crewList.style.transform = "translate(-750px)";
-    displayBtn(crewLeftBtn, crewRightBtn);
-    // crewList.style.transition = `transform 0s`;
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof startCountdown === "function") {
+        startCountdown();
+    } else {
+        console.warn("⚠️ startCountdown() not found!");
+    }
 });
 
-crewLeftBtn.addEventListener("click", (e) => {
-    crewList.style.transition = `transform 0.5s`;
-    crewList.style.transform = "translate(0px)";
-    displayBtn(crewRightBtn, crewLeftBtn);
-    // crewList.style.transition = `transform 0s`;
-});
 
 // 여행 경로에서 경계선 주기
 const color = [
@@ -93,3 +78,41 @@ likeBtns.forEach((likeBtn) => {
         }, 2000);
     });
 });
+
+function startCountdown() {
+    const timers = document.querySelectorAll("div.gift-limit-time");
+
+    timers.forEach((timer) => {
+        const endTime = new Date(timer.dataset.endtime);
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = endTime - now;
+
+            if (diff <= 0) {
+                timer.textContent = "마감";
+                return;
+            }
+
+            const totalSeconds = Math.floor(diff / 1000);
+
+            const days = Math.floor(totalSeconds / (3600 * 24));
+            const hours = String(
+                Math.floor((totalSeconds % (3600 * 24)) / 3600)
+            ).padStart(2, "0");
+            const minutes = String(
+                Math.floor((totalSeconds % 3600) / 60)
+            ).padStart(2, "0");
+            const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+            if (days > 0) {
+                timer.textContent = `${days}일 ${hours}:${minutes}:${seconds} 남음`;
+            } else {
+                timer.textContent = `${hours}:${minutes}:${seconds} 남음`;
+            }
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    });
+}

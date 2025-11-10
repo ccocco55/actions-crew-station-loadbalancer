@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crew Station</title>
-    <link rel="shortcut icon" href="/static/images/crew-station-favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/mypage/my-diary/list.css">
+    <link rel="shortcut icon" href="/images/crew-station-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/mypage/my-diary/list.css">
     <link rel="stylesheet" href="/css/fixed/web/header.css">
     <link rel="stylesheet" href="/css/fixed/web/footer.css">
 </head>
@@ -16,41 +16,11 @@
         <div class="myhome-nav">
             <nav class="page-navigation">
                 <ul>
-                    <li class="page-navigation__item">
-                        <a href=""  class="active">
-                            나의 다이어리
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 크루 구하기
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 크루 목록
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 활동
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 구매 내역
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 판매 내역
-                        </a>
-                    </li>
-                    <li class="page-navigation__item">
-                        <a href="">
-                            나의 문의
-                        </a>
-                    </li>
+                    <li class="page-navigation__item"><a href="/mypage/diary-list" class="active">나의 다이어리</a></li>
+                    <li class="page-navigation__item"><a href="/mypage/my-activities">나의 활동</a></li>
+                    <li class="page-navigation__item"><a href="/mypage/purchase-list">나의 구매 내역</a></li>
+                    <li class="page-navigation__item"><a href="/mypage/sale-list">나의 판매 내역</a></li>
+                    <li class="page-navigation__item"><a href="/mypage/modify">나의 프로필</a></li>
                 </ul>
             </nav>
         </div>
@@ -60,9 +30,9 @@
                     <p class="title-p">나의 다이어리</p>
                     <div class="share-button">
                         <div class="drop-down">
-                            <button class="share-button-style">
+                            <a href="/diaries/write" class="share-button-style">
                                 <span class="share-text">다이어리 작성하기</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -73,23 +43,13 @@
                     </a>
                 </div>
             </div>
-            <div class="sticky-container">
+            <div class="m-sticky-container">
                 <div style="position: relative;">
                     <div class="nav-wrap">
                         <nav>
                             <button class="nav-button active">
                                 <div class="p-wrap">
-                                    <p class="tag-name">모두(26)</p>
-                                </div>
-                            </button>
-                            <button class="nav-button">
-                                <div class="p-wrap">
-                                    <p class="tag-name">개인(16)</p>
-                                </div>
-                            </button>
-                            <button class="nav-button">
-                                <div class="p-wrap">
-                                    <p class="tag-name">크루(10)</p>
+                                    <p class="tag-name">전체(0)</p>
                                 </div>
                             </button>
                         </nav>
@@ -100,181 +60,27 @@
             <div class="sticky-container">
                 <div style="position: relative;">
                     <div class="nav-footer">
-                        <div class="update">
-                            <span class="total">
-                                <span class="check-number">0 </span>
-                                / 
-                                <span class="total-number"> 5</span>
-                            </span>
-                            <div class="button-wrap">
-                                <button class="update-button">
-                                    편집
-                                </button>
-                                <div class="update-div">
-                                    <button class="remove" disabled>삭제</button>
-                                    <button class="cancle">취소</button>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="update">-->
+<!--                            <span class="total">-->
+<!--                                <span class="check-number">0 </span>-->
+<!--                                / -->
+<!--                                <span class="total-number"> 5</span>-->
+<!--                            </span>-->
+<!--                            <div class="button-wrap">-->
+<!--                                <button class="update-button">-->
+<!--                                    편집-->
+<!--                                </button>-->
+<!--                                <div class="update-div">-->
+<!--                                    <button class="remove" disabled>삭제</button>-->
+<!--                                    <button class="cancle">취소</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
             <div class="diary-container">
                 <div class="diary-container-inner">
-                    <!-- 일기 div -->
-                    <div class="diary-wrap">
-                        <div class="diary-div">
-                            <a href="">
-                                <div class="diary-img-wrap">
-                                    <img class="diary-img" src="/static/images/diary-list-ex2.jpg">
-                                    <div class="more-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="#FFFFFF" viewBox="0 0 18 18">
-                                            <path d="M2.25 4.35a2.5 2.5 0 0 1 2.5-2.5h6.8a2.5 2.5 0 0 1 2.5 2.5v6.8a2.5 2.5 0 0 1-2.5 2.5h-6.8a2.5 2.5 0 0 1-2.5-2.5z"></path><path fill-rule="evenodd" d="M15.75 4.05a.8.8 0 0 1 .8.8v7a4.3 4.3 0 0 1-4.3 4.3h-7a.8.8 0 0 1 0-1.6h7a2.7 2.7 0 0 0 2.7-2.7v-7a.8.8 0 0 1 .8-.8" clip-rule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="date-tag">
-                                        <span class="tag-span">2025.09.11</span>
-                                    </div>
-                                    <div class="info">
-                                    </div>
-                                    <p class="diary-title">어디 어디 감</p>
-                                    <p class="diary-content">오늘은 날씨가 정말 좋았다. 아침에 일어나서 산책을 했고, 점심에는 친구들과 맛있는 음식을 먹었다. 오후에는 책을 읽으며 여유로운 시간을 보냈다. 저녁에는 가족과 함께 시간을 보내며 하루를 마무리했다. 정말 행복한 하루였다.</p>
-                                </div>
-                            </a>
-                            <label class="checkbox">
-                                <div class="checkbox-inner">
-                                    <div class="checkbox-in">
-                                        <span class="checkbox-span"></span>
-                                        <input type="checkbox" class="checkbox-input">
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="diary-wrap">
-                        <div class="diary-div">
-                            <a href="">
-                                <div class="diary-img-wrap">
-                                    <img class="diary-img" src="/static/images/diary-list-ex3.jpg">
-                                    <div class="more-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="#FFFFFF" viewBox="0 0 18 18">
-                                            <path d="M2.25 4.35a2.5 2.5 0 0 1 2.5-2.5h6.8a2.5 2.5 0 0 1 2.5 2.5v6.8a2.5 2.5 0 0 1-2.5 2.5h-6.8a2.5 2.5 0 0 1-2.5-2.5z"></path><path fill-rule="evenodd" d="M15.75 4.05a.8.8 0 0 1 .8.8v7a4.3 4.3 0 0 1-4.3 4.3h-7a.8.8 0 0 1 0-1.6h7a2.7 2.7 0 0 0 2.7-2.7v-7a.8.8 0 0 1 .8-.8" clip-rule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="date-tag">
-                                        <span class="tag-span">2025.09.11</span>
-                                    </div>
-                                    <div class="info">
-                                    </div>
-                                    <p class="diary-title">어디 어디 감</p>
-                                    <p class="diary-content">오늘은 날씨가 정말 좋았다. 아침에 일어나서 산책을 했고, 점심에는 친구들과 맛있는 음식을 먹었다. 오후에는 책을 읽으며 여유로운 시간을 보냈다. 저녁에는 가족과 함께 시간을 보내며 하루를 마무리했다. 정말 행복한 하루였다.</p>
-                                </div>
-                            </a>
-                            <label class="checkbox">
-                                <div class="checkbox-inner">
-                                    <div class="checkbox-in">
-                                        <span class="checkbox-span"></span>
-                                        <input type="checkbox" class="checkbox-input">
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="diary-wrap">
-                        <div class="diary-div">
-                            <a href="">
-                                <div class="diary-img-wrap">
-                                    <img class="diary-img" src="/static/images/diary-list-ex.jpeg">
-                                    <div class="more-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="#FFFFFF" viewBox="0 0 18 18">
-                                            <path d="M2.25 4.35a2.5 2.5 0 0 1 2.5-2.5h6.8a2.5 2.5 0 0 1 2.5 2.5v6.8a2.5 2.5 0 0 1-2.5 2.5h-6.8a2.5 2.5 0 0 1-2.5-2.5z"></path><path fill-rule="evenodd" d="M15.75 4.05a.8.8 0 0 1 .8.8v7a4.3 4.3 0 0 1-4.3 4.3h-7a.8.8 0 0 1 0-1.6h7a2.7 2.7 0 0 0 2.7-2.7v-7a.8.8 0 0 1 .8-.8" clip-rule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="date-tag">
-                                        <span class="tag-span">2025.09.11</span>
-                                    </div>
-                                    <div class="info">
-                                    </div>
-                                    <p class="diary-title">어디 어디 감</p>
-                                    <p class="diary-content">오늘은 날씨가 정말 좋았다. 아침에 일어나서 산책을 했고, 점심에는 친구들과 맛있는 음식을 먹었다. 오후에는 책을 읽으며 여유로운 시간을 보냈다. 저녁에는 가족과 함께 시간을 보내며 하루를 마무리했다. 정말 행복한 하루였다.</p>
-                                </div>
-                            </a>
-                            <label class="checkbox">
-                                <div class="checkbox-inner">
-                                    <div class="checkbox-in">
-                                        <span class="checkbox-span"></span>
-                                        <input type="checkbox" class="checkbox-input">
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="diary-wrap">
-                        <div class="diary-div">
-                            <a href="">
-                                <div class="diary-img-wrap">
-                                    <img class="diary-img" src="/static/images/diary-list-ex.jpeg">
-                                    <div class="more-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="#FFFFFF" viewBox="0 0 18 18">
-                                            <path d="M2.25 4.35a2.5 2.5 0 0 1 2.5-2.5h6.8a2.5 2.5 0 0 1 2.5 2.5v6.8a2.5 2.5 0 0 1-2.5 2.5h-6.8a2.5 2.5 0 0 1-2.5-2.5z"></path><path fill-rule="evenodd" d="M15.75 4.05a.8.8 0 0 1 .8.8v7a4.3 4.3 0 0 1-4.3 4.3h-7a.8.8 0 0 1 0-1.6h7a2.7 2.7 0 0 0 2.7-2.7v-7a.8.8 0 0 1 .8-.8" clip-rule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="date-tag">
-                                        <span class="tag-span">2025.09.11</span>
-                                    </div>
-                                    <div class="info">
-                                    </div>
-                                    <p class="diary-title">어디 어디 감</p>
-                                    <p class="diary-content">오늘은 날씨가 정말 좋았다. 아침에 일어나서 산책을 했고, 점심에는 친구들과 맛있는 음식을 먹었다. 오후에는 책을 읽으며 여유로운 시간을 보냈다. 저녁에는 가족과 함께 시간을 보내며 하루를 마무리했다. 정말 행복한 하루였다.</p>
-                                </div>
-                            </a>
-                            <label class="checkbox">
-                                <div class="checkbox-inner">
-                                    <div class="checkbox-in">
-                                        <span class="checkbox-span"></span>
-                                        <input type="checkbox" class="checkbox-input">
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="diary-wrap">
-                        <div class="diary-div">
-                            <a href="">
-                                <div class="diary-img-wrap">
-                                    <img class="diary-img" src="/static/images/diary-list-ex.jpeg">
-                                    <div class="more-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="#FFFFFF" viewBox="0 0 18 18">
-                                            <path d="M2.25 4.35a2.5 2.5 0 0 1 2.5-2.5h6.8a2.5 2.5 0 0 1 2.5 2.5v6.8a2.5 2.5 0 0 1-2.5 2.5h-6.8a2.5 2.5 0 0 1-2.5-2.5z"></path><path fill-rule="evenodd" d="M15.75 4.05a.8.8 0 0 1 .8.8v7a4.3 4.3 0 0 1-4.3 4.3h-7a.8.8 0 0 1 0-1.6h7a2.7 2.7 0 0 0 2.7-2.7v-7a.8.8 0 0 1 .8-.8" clip-rule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="date-tag">
-                                        <span class="tag-span">2025.09.11</span>
-                                    </div>
-                                    <div class="info">
-                                    </div>
-                                    <p class="diary-title">어디 어디 감</p>
-                                    <p class="diary-content">오늘은 날씨가 정말 좋았다. 아침에 일어나서 산책을 했고, 점심에는 친구들과 맛있는 음식을 먹었다. 오후에는 책을 읽으며 여유로운 시간을 보냈다. 저녁에는 가족과 함께 시간을 보내며 하루를 마무리했다. 정말 행복한 하루였다.</p>
-                                </div>
-                            </a>
-                            <label class="checkbox">
-                                <div class="checkbox-inner">
-                                    <div class="checkbox-in">
-                                        <span class="checkbox-span"></span>
-                                        <input type="checkbox" class="checkbox-input">
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <!-- 일기 div 있는 만큼 -->
-                    <!-- 일기 없을 때 -->
-                    <!-- <p class="user-project-feed__empty">결과가 존재하지 않습니다.</p> -->
                 </div>
             </div>
         </main>
@@ -289,5 +95,7 @@
 </body>
 <script src="/js/fixed/web/header/module/service.js"></script>
 <script src="/js/fixed/web/header/event.js"></script>
-<script src="/static/js/mypage/my-diary/list/event.js"></script>
+<script src="/js/mypage/my-diary/list/module/service.js"></script>
+<script src="/js/mypage/my-diary/list/module/layout.js"></script>
+<script src="/js/mypage/my-diary/list/event.js"></script>
 </html>

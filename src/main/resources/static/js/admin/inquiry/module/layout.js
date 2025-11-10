@@ -1,124 +1,156 @@
-const inquireLayout = (() => {
-    const safe = (v, d='-') => (v === null || v === undefined || v === '') ? d : String(v);
-    const esc  = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    const nl2br = (s) => String(s).replace(/\n/g, '<br>');
+const inquireLayout = (function () {
 
-    const $section = () => document.querySelector('#section-inquiry');
-    const $tbody   = () => $section()?.querySelector('table tbody');
-    const $total   = () => $section()?.querySelector('.count-amount');
-    const $pillAns = () => $section()?.querySelectorAll('.pill-row .span-amount')[0];
-    const $pillUnA = () => $section()?.querySelectorAll('.pill-row .span-amount')[1];
+    // 목록 비우기
+    function clear() {
+        const tbody = document.querySelector('#section-inquiry table tbody');
+        if (tbody) tbody.innerHTML = '';
 
-    const clear = () => {
-        const tb = $tbody(); if (tb) tb.innerHTML = '';
-        const t = $total(); if (t) t.textContent = '0';
-        const a = $pillAns(); if (a) a.textContent = '0';
-        const u = $pillUnA(); if (u) u.textContent = '0';
-    };
+        const count = document.querySelector('#section-inquiry .count-amount');
+        const pill1 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[0];
+        const pill2 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[1];
 
-    const showEmpty = () => {
-        const tb = $tbody(); if (!tb) return;
-        tb.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">문의 내역이 없습니다.</td></tr>`;
-        const t = $total(); if (t) t.textContent = '0';
-        const a = $pillAns(); if (a) a.textContent = '0';
-        const u = $pillUnA(); if (u) u.textContent = '0';
-    };
+        if (count) count.textContent = '0';
+        if (pill1) pill1.textContent = '0';
+        if (pill2) pill2.textContent = '0';
+    }
 
-    const showList = (list = []) => {
-        const tb = $tbody(); if (!tb) return;
-        tb.innerHTML = '';
+    // 목록이 없을 때
+    function showEmpty() {
+        const tbody = document.querySelector('#section-inquiry table tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="text-center text-muted py-4">문의 내역이 없습니다.</td>
+      </tr>
+    `;
+
+        const count = document.querySelector('#section-inquiry .count-amount');
+        const pill1 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[0];
+        const pill2 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[1];
+
+        if (count) count.textContent = '0';
+        if (pill1) pill1.textContent = '0';
+        if (pill2) pill2.textContent = '0';
+    }
+
+    // 목록 출력
+    function showList(list) {
+        const tbody = document.querySelector('#section-inquiry table tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
 
         if (!Array.isArray(list) || list.length === 0) {
-            showEmpty(); return;
+            showEmpty();
+            return;
         }
 
-        let answered = 0, unanswered = 0;
-        const frag = document.createDocumentFragment();
+        let answered = 0;
+        let unanswered = 0;
 
-        list.forEach(it => {
-            (it.inquiryStatus === 'ANSWERED' ? answered++ : unanswered++);
+        list.forEach((item) => {
+            if (item.inquiryStatus === 'ANSWERED') answered++;
+            else unanswered++;
+
             const tr = document.createElement('tr');
-            tr.dataset.id = it.id;
+            tr.dataset.id = item.id;
 
             tr.innerHTML = `
-        <td class="text-list">${safe(it.id)}</td>
-        <td>${esc(it.inquiryContent || '')}</td>
-        <td>${safe(it.createdDatetime)}</td>
-        <td>${it.inquiryStatus === 'ANSWERED' ? '답변완료' : '미답변'}</td>
-        <td>${safe(it.replyDatetime)}</td>
+        <td>${item.id}</td>
+        <td>${item.inquiryContent || ''}</td>
+        <td>${item.createdDatetime || ''}</td>
+        <td>${item.inquiryStatus === 'ANSWERED' ? '답변완료' : '미답변'}</td>
+        <td>${item.replyDatetime || ''}</td>
         <td class="td-action text-center">
-          <button type="button" class="action-btn view" data-id="${it.id}">
+          <button type="button" class="action-btn view" data-id="${item.id}">
             <i class="mdi mdi-chevron-right"></i>
           </button>
-        </td>`;
-            frag.appendChild(tr);
+        </td>
+      `;
+            tbody.appendChild(tr);
         });
 
-        tb.appendChild(frag);
-        const t = $total(); if (t) t.textContent = String(list.length);
-        const a = $pillAns(); if (a) a.textContent = String(answered);
-        const u = $pillUnA(); if (u) u.textContent = String(unanswered);
-    };
+        tbody.closest('#section-inquiry').style.display = 'block';
 
-    const showDetail = (dto = {}) => {
-        const modal = document.getElementById('modal');
+        const count = document.querySelector('#section-inquiry .count-amount');
+        const pill1 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[0];
+        const pill2 = document.querySelectorAll('#section-inquiry .pill-row .span-amount')[1];
+
+        if (count) count.textContent = String(list.length);
+        if (pill1) pill1.textContent = String(answered);
+        if (pill2) pill2.textContent = String(unanswered);
+
+        tbody.offsetHeight;
+    }
+
+    // 상세 보기
+    function showDetail(data) {
+        const modal = document.getElementById('inquiry-modal');
         if (!modal) return;
 
-        modal.dataset.inquiryId = dto.id;
+        modal.dataset.inquiryId = data.id || data.inquiryId || data.askId || '';
+        console.log('[inquiry] modal.dataset.inquiryId =', modal.dataset.inquiryId);
 
+        // 상단 상태
         const badge = modal.querySelector('.modal-title .badge-label');
         if (badge) {
-            const answered = !!dto.replyId;
-            badge.textContent = answered ? '답변완료' : '미답변';
-            badge.classList.toggle('text-primary', answered);
-            badge.classList.toggle('text-danger', !answered);
+            badge.textContent = data.inquiryStatus === 'ANSWERED' ? '답변완료' : '미답변';
+            badge.className = data.inquiryStatus === 'ANSWERED'
+                ? 'badge-label text-primary font-weight-bold ml-2'
+                : 'badge-label text-danger font-weight-bold ml-2';
         }
 
-        // 문의정보 2단 테이블
+        // 문의정보
         const infoTables = modal.querySelectorAll('.detail-info .info-table');
         if (infoTables[0]) {
             infoTables[0].querySelector('tbody').innerHTML = `
-        <tr><th>문의번호</th><td>${safe(dto.id)}</td></tr>
-        <tr><th>문의시간</th><td>${safe(dto.createdDatetime)}</td></tr>
-      `;
+            <tr><th>문의번호</th><td>${data.id || data.inquiryId || ''}</td></tr>
+            <tr><th>문의시간</th><td>${data.createdDatetime || ''}</td></tr>
+        `;
         }
         if (infoTables[1]) {
             infoTables[1].querySelector('tbody').innerHTML = `
-        <tr><th>문의 유형</th><td>-</td></tr>
-        <tr><th>회원ID</th><td>${safe(dto.memberId)} (${esc(dto.memberName || '')})</td></tr>
-      `;
+            <tr><th>문의 유형</th><td>-</td></tr>
+            <tr><th>회원ID</th><td>${data.memberId || ''}</td></tr>
+        `;
         }
 
         // 문의내용
-        const contentTable = modal.querySelectorAll('.detail-info .info-table')[2] ||
-            modal.querySelector('.detail-info:nth-of-type(2) .info-table');
+        const contentTable = modal.querySelectorAll('.detail-info .info-table')[2];
         if (contentTable) {
-            contentTable.querySelector('tbody').innerHTML =
-                `<tr><th>문의내용</th><td>${nl2br(esc(dto.inquiryContent || ''))}</td></tr>`;
+            contentTable.querySelector('tbody').innerHTML = `
+            <tr><th>문의내용</th><td>${data.inquiryContent || ''}</td></tr>
+        `;
         }
 
-        // 답변 입력 초기화
-        const inp = modal.querySelector('.payment-info input');
-        if (inp) inp.value = '';
-    };
+        const replyInput = modal.querySelector('.inquiry-reply input, .inquiry-reply textarea');
+        if (replyInput) replyInput.value = '';
+    }
 
-    const openModal = () => {
-        const modal = document.getElementById('modal'); if (!modal) return;
+
+    // 모달 열기
+    function openModal() {
+        const modal = document.getElementById('inquiry-modal');
+        if (!modal) return;
         modal.style.display = 'block';
-        requestAnimationFrame(() => {
-            modal.classList.add('show');
-            modal.style.background = 'rgba(0,0,0,0.5)';
-            document.body.classList.add('modal-open');
-        });
-    };
+        modal.classList.add('show');
+        document.body.classList.add('modal-open');
+    }
 
-    const closeModal = () => {
-        const modal = document.getElementById('modal'); if (!modal) return;
+    // 모달 닫기
+    function closeModal() {
+        const modal = document.getElementById('inquiry-modal');
+        if (!modal) return;
         modal.classList.remove('show');
         document.body.classList.remove('modal-open');
-        setTimeout(() => { modal.style.display = 'none'; }, 100);
-        delete modal.dataset.inquiryId;
-    };
+        modal.style.display = 'none';
+    }
 
-    return { clear, showEmpty, showList, showDetail, openModal, closeModal };
+    return {
+        clear,
+        showEmpty,
+        showList,
+        showDetail,
+        openModal,
+        closeModal
+    };
 })();

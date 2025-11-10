@@ -545,8 +545,8 @@ address, dl, ol, ul {
 }
 @media (min-width: 1200px) {
     .col-lg-4 {
-        flex: 0 0 33.33333333% !important;
-        max-width: 33.33333333% !important;
+        /*flex: 0 0 33.33333333% !important;*/
+        /*max-width: 33.33333333% !important;*/
     }
 }
 .receipt-index .page-content {
@@ -1412,3 +1412,5 @@ table.info-table td, table.info-table th {
     .mdi-check-all :before {
         content: "\F012C";
     }
+
+.modal.show { display:block; }

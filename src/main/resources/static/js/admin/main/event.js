@@ -1,4 +1,5 @@
 function showSection(name) {
+    closeAllModals();
     const container = document.getElementById('page-container');
     if (!container) return;
 
@@ -7,7 +8,6 @@ function showSection(name) {
     let target = container.querySelector(`#${CSS.escape(targetId)}`);
 
     if (!target) {
-        console.warn('[showSection] target not found:', targetId);
         return;
     }
 
@@ -41,16 +41,32 @@ function showSection(name) {
         'notice'      : window.noticeInit,
         'diary-report': window.diaryReportInit,
         'gift-report' : window.giftReportInit,
+        'crew-report' : window.crewReportInit,
         'payment'     : window.paymentInit,
         'inquiry'     : window.inquiryInit,
         'banner'      : window.bannerInit,
+
     };
     const init = initMap[name];
-    if (typeof init === 'function' && !showSection.inited[name]) {
-        try { init(); showSection.inited[name] = true; }
+    if (typeof init === 'function') {
+        try { init(); }
         catch (e) { console.error(`[showSection] init error (${name})`, e); }
     }
+
 }
+
+function closeAllModals() {
+    document.querySelectorAll('.modal.show, .report-modal.show, .member-modal.show').forEach((m) => {
+        m.classList.remove('show');
+        m.style.display = 'none';
+        m.setAttribute('aria-hidden', 'true');
+    });
+
+    // body 클래스도 정리
+    document.body.classList.remove('modal-open');
+}
+
+
 
 
 
@@ -107,7 +123,8 @@ function showSection(name) {
         const subLink = e.target.closest(".menu-sub-list .boot-link");
         if (subLink && side.contains(subLink)) {
             e.preventDefault();
-            if (subLink.dataset.section) showSection(subLink.dataset.section); // 라우팅
+            closeAllModals();
+            if (subLink.dataset.section) showSection(subLink.dataset.section);
 
             const ul = subLink.closest(".menu-sub-list");
             ul.querySelectorAll(".boot-link.active").forEach((a) => a.classList.remove("active"));
@@ -119,11 +136,16 @@ function showSection(name) {
         }
 
         const btnTop = e.target.closest(".menu-item > .menu-btn");
-        if (!btnTop || !side.contains(btnTop)) return;
+        if (!btnTop || !side.contains(btnTop)) {
+            return;
+        }
 
         if (btnTop.dataset.section) {
             e.preventDefault();
-            showSection(btnTop.dataset.section);
+            closeAllModals?.();
+            closeAllMenus();
+            showSection?.(btnTop.dataset.section);
+            btnTop.classList.add("active", "current");
             return;
         }
 
@@ -144,7 +166,6 @@ function showSection(name) {
                     panel.querySelectorAll('.boot-link.active').forEach(a => a.classList.remove('active'));
                     first.classList.add('active');
                     showSection(first.dataset.section);
-                    console.log('[sidebar] auto route ->', first.dataset.section);
                 }, 0);
             }
         } else {
@@ -357,10 +378,10 @@ function drawPie(staticsData) {
 
   // 로그인 정보/로그아웃
 async function fetchWithRefresh(url, opts = {}) {
-    let res = await fetch(url, { credentials: 'include'});
+    let res = await fetch(url, { ...opts, credentials: 'include' });
     if (res.status === 401) {
         const r = await fetch('/api/admin/auth/refresh', { method: 'GET', credentials: 'include' });
-        if (r.ok) res = await fetch(url, { credentials: 'include'});
+        if (r.ok) res = await fetch(url, { ...opts, credentials: 'include' });
     }
     return res;
 }

@@ -9,4 +9,10 @@
         select * from tbl_member_file
     </select>
 
+    <!-- 멤버 <-> 파일 연결 관계 삭제 -->
+    <delete id="deleteMemberFile">
+        DELETE FROM tbl_member_file
+        WHERE member_id = #{memberId} AND file_id = #{fileId}
+    </delete>
+
 </mapper>

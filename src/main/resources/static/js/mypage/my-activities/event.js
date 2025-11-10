@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profileWrap = document.querySelector(".profile-wrap");
     const tagNames = document.querySelectorAll(".tag-name");
     const PROFILE_EDIT_URL = "/mypage/modify";
+    const DEFAULT_IMG = "/images/crew-station-icon-profile.png";
 
     // 공통 상태값
     let replyPage = 1;
@@ -17,14 +18,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (a) a.href = PROFILE_EDIT_URL;
 
         try {
-            await memberService.info(async (member) => {
-                if (member) {
-                    const imgEl = profileWrap.querySelector(".profile-img");
-                    const nameEl = profileWrap.querySelector(".profile-name");
-                    if (imgEl) imgEl.src = member.socialImgUrl || "/images/crew-station-icon-profile.png";
-                    if (nameEl) nameEl.textContent = member.memberName || "";
+            const member = await memberProfileService.getMyPageProfile();
+
+            if (member) {
+                const imgEl = profileWrap.querySelector(".profile-img");
+                const nameEl = profileWrap.querySelector(".profile-name");
+
+                if (imgEl) {
+                    if (member.filePath) {
+                        imgEl.src = member.filePath;
+                    } else if (member.socialImgUrl) {
+                        imgEl.src = member.socialImgUrl;
+                    } else {
+                        imgEl.src = DEFAULT_IMG;
+                    }
                 }
-            });
+
+                if (nameEl) nameEl.textContent = member.memberName || "";
+            }
         } catch (e) {
             console.error("프로필 불러오기 실패:", e);
         }

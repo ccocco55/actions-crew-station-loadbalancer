@@ -1485,3 +1485,9 @@ td {
     height: auto !important;
     visibility: visible !important;
 }
+
+.modal.show {
+    pointer-events: auto !important;
+    z-index: 2000 !important;
+}
+

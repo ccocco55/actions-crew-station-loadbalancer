@@ -26,4 +26,16 @@
         where id = #{id}
     </select>
 
+    <select id="findProfileByMemberId">
+        SELECT f.id,
+               f.file_path AS filePath,
+               f.file_name AS fileName,
+               f.file_origin_name AS fileOriginName,
+               f.file_size AS fileSize
+        FROM tbl_member_file mf
+                 JOIN tbl_file f ON mf.file_id = f.id
+        WHERE mf.member_id = #{memberId}
+        LIMIT 1
+    </select>
+
 </mapper>

@@ -171,7 +171,7 @@
             </div>
 
             <div class="product-seller-info-container">
-                <a class="product-seller-info-wrapper">
+                <a class="product-seller-info-wrapper" th:href="@{/member/profile/{id}(id=${purchase.memberId})}">
                     <div class="product-seller-profile">
                         <th:block th:if="${purchase.filePath != null}">
                             <img class="product-seller-profile-img" th:src="@{${purchase.filePath}}">
@@ -418,6 +418,20 @@
 </div>
 </div>
 </div>
+
+<!-- 모달 팝업 -->
+<div id="modal" class="hidden">
+    <div id="modalContent">
+        <button id="closeBtn">✕</button>
+        <div id="addressWrap" style="
+    border-top: 1px solid;
+    margin-top: 35px;    height: 100%;
+
+"></div>
+    </div>
+</div>
+
+
 <div class="toast hide" style="display: none;">
     <div class="toast-wrap">
         <p class="toast-text">클립보드에 복사되었습니다.</p>

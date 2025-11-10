@@ -1,6 +1,6 @@
 window.giftReportInit = async function () {
-    if (window.__giftReportInited) return;     // 1회만
-    window.__giftReportInited = true;
+    if (window.giftReportInited) return;
+    window.giftReportInited = true;
 
     const section = document.getElementById('section-gift-report');
     if (!section) return;
@@ -16,7 +16,6 @@ window.giftReportInit = async function () {
 
     await load(page);
 
-    // 스크롤 컨테이너(메인 영역) — 중복 바인딩 방지
     const container = document.querySelector('#bootpay-main');
     if (container && !container.__giftScrollBound) {
         container.__giftScrollBound = true;

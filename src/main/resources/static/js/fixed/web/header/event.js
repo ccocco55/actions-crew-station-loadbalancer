@@ -31,41 +31,58 @@ document.body.addEventListener("click", (e) => {
 
 // ===================== 헤더 버튼에 따른 서브 헤더 =====================
 let currentPage = "home";
+let path = window.location.pathname.split("/")[1]
+console.log(path+" asdasd");
+if (path === "diaries"){
+
+    console.log("다이어리 들어왔어")
+    currentPage = "diary";
+
+} else if(path === "notice") {
+    console.log("공지사항")
+    currentPage = "notice";
+}
+const aTag = document.querySelector(`a.sticky-btn.${currentPage}.${currentPage}-btn`);
+console.log(aTag);
+aTag.classList.add("active");
+
+
 const stickyBtns = document.querySelectorAll("a.sticky-btn");
 stickyBtns.forEach((stickyBtn) => {
     // 헤더 버튼 글씨 색깔 바꿔주기
-    stickyBtn.addEventListener("click", (e) => {
-        stickyBtns.forEach((btn) => btn.classList.remove("active"));
-        stickyBtn.classList.add("active");
+    // stickyBtns.forEach((btn) => btn.classList.remove("active"));
+    // stickyBtn.classList.add("active");
 
-        const subHeader = stickyBtn.classList[1];
-        currentPage = subHeader;
+    const subHeader = stickyBtn.classList[1];
+    // currentPage = subHeader;
+    // console.log(currentPage)
 
-        const headers = document.querySelectorAll(`div.sticky-container.sticky-sub-container`);
-        headers.forEach((header) => {
-            if (header.classList.contains(subHeader)) {
-                header.classList.add("active");
-                header.firstElementChild.style.zIndex = 1000;
-            } else {
-                header.classList.remove("active");
-                header.firstElementChild.style.zIndex = 1200;
-            }
-        });
-
-        // 서브헤더 선택 초기화
-        const initActives = document.querySelectorAll(
-            `div.sticky-container.sticky-sub-container.${subHeader} a.header-category`
-        );
-        initActives.forEach((init, index) => {
-            if (index === 0) {
-                init.classList.add("active");
-                init.firstElementChild.firstElementChild.classList.replace("header-name", "header-name-check");
-            } else {
-                init.classList.remove("active");
-                init.firstElementChild.firstElementChild.classList.replace("header-name-check", "header-name");
-            }
-        });
+    const headers = document.querySelectorAll(`div.sticky-container.sticky-sub-container`);
+    console.log(headers)
+    headers.forEach((header) => {
+        if (header.classList.contains(currentPage)) {
+            header.classList.add("active");
+            header.firstElementChild.style.zIndex = 1000;
+        } else {
+            header.classList.remove("active");
+            header.firstElementChild.style.zIndex = 1200;
+        }
     });
+
+    // 서브헤더 선택 초기화
+    const initActives = document.querySelectorAll(
+        `div.sticky-container.sticky-sub-container.${subHeader} a.header-category`
+    );
+    initActives.forEach((init, index) => {
+        if (index === 0) {
+            init.classList.add("active");
+            init.firstElementChild.firstElementChild.classList.replace("header-name", "header-name-check");
+        } else {
+            init.classList.remove("active");
+            init.firstElementChild.firstElementChild.classList.replace("header-name-check", "header-name");
+        }
+    });
+
 });
 
 // ===================== 서브 헤더 버튼 클릭 이벤트 =====================
@@ -187,6 +204,8 @@ items.forEach((item) => {
         }, 1500);
     });
 });
+
+
 
 
 // 로그아웃

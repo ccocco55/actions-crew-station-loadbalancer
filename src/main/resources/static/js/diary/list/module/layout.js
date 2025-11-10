@@ -26,20 +26,22 @@ const diariesListLayout = (() => {
                 text += `
             <div class="card-feed-item-wrap">
                                     <article class="card-collection-item">
+                                    <a class="card-writer-link" href="/member/profile/${diary.memberId}">
                                         <div class="card-writer">
                                             <div class="card-item-writer-content">
                                                 <div class="card-item-writer-header">
-                                                        <a class="card-writer-link">
+                                                            
                                                             <img src="${filePath}" alt="" class="card-writer-img">
                                                             <div class="writer-info">
                                                                 <span class="writer-name">${diary.memberName}</span>
                                                                 
                                                             </div>
                                                            
-                                                        </a>
+                                                        
                                                         
                                                     </div>
                                             </div>
+                                          </a>
                                         </div>
                                         <div class="card-collection-item-content">
                                             <div class="card-collection-item-img">

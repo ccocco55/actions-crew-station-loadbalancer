@@ -1,4 +1,5 @@
-const replyService = (() => {
+const replyService
+    = (() => {
 
 
     const getList = async (postId, callback, page=1) => {

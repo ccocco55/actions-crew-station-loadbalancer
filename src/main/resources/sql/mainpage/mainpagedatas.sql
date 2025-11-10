@@ -1144,7 +1144,7 @@ FROM tbl_diary
 ORDER BY post_id DESC;
 
 insert into tbl_member (member_name, member_email, member_password, member_role)
-values ('test', 'test@naver.com', 'tet1234', 'admin');
+values ('test', 'test4@naver.com', 'tet1234', 'member');
 
 select * from tbl_member;
 
@@ -1316,5 +1316,36 @@ insert into tbl_banner_file(file_id, banner_id)
 values (34, 11);
 
 select * from tbl_member;
+select * from tbl_post_report;
+select * from tbl_post;
+select * from tbl_report;
+select * from tbl_accompany_path;
+select * from tbl_accompany;
+select * from tbl_country;
+select * from tbl_diary_country;
+
+-- 동행 신고
+
+insert into tbl_post(post_title, post_read_count, post_status, member_id)
+values ('숏크루 신고 테스트3', '70', 'active','33' );
+
+insert into tbl_report(report_content, report_process_status, member_id)
+values ('숏크루 신고3', 'pending', '33');
+
+insert into tbl_post_report(report_id,post_id)
+values (20,52);
+
+
+
+insert into tbl_country(country_name)
+values ('유럽');
+
+insert into tbl_accompany(post_id, accompany_status, accompany_age_range)
+values ('50','short','20');
+
+
+insert into tbl_accompany_path (country_start_date, country_end_date, accompany_id, country_id)
+values ('2014-10-8', '2025-10-10', '35', '26');
+
 
 

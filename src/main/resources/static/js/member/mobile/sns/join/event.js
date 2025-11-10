@@ -67,6 +67,115 @@ genderRadioes.forEach((radio) => {
     });
 });
 
+
+// 휴대전화 번호 검사
+
+const memberPhone = document.querySelector("#memberPhone");
+const phoneText = document.querySelector(".error-text-phone");
+const phoneTextSpan = document.querySelector(".error-text-phone span");
+
+memberPhone.addEventListener("keyup", (e) => {
+    const phone = memberPhone.value.replace(/[^0-9]/g, "");
+    memberPhone.value = phone; // 자동으로 숫자만 입력되게 정리
+
+    const phoneRegex = /^010\d{8}$/;
+
+    if (!phoneRegex.test(phone)) {
+        phoneText.style.display = "block";
+        phoneTextSpan.innerText = "번호를 다시 확인해 주세요.";
+
+        memberPhone.classList.add("error");
+    } else {
+        phoneText.style.display = "none";
+        phoneTextSpan.innerText = "";
+
+        memberPhone.classList.remove("error");
+    }
+});
+
+
+
+// 휴대전화 인증 체크 부분
+const inputPhone = document.querySelector("input.phone");
+const codeSendBtn = document.querySelector("button.phone-certification");
+const codeCheckBtn = document.querySelector("button.code-check");
+const code = document.querySelector("input.essential.code");
+let codeSendCheck = true;
+let time = 5 * 60;
+let timer;
+function updateTimer(timer) {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    document.querySelector(".limit-time").textContent = `${minutes}:${
+        seconds < 10 ? "0" + seconds : seconds
+    }`;
+
+    if (time > 0) {
+        time--;
+    } else {
+        mailSendCheck = true;
+        clearInterval(timer); // 0초가 되면 멈춤
+    }
+}
+
+const codeInputWrap = document.querySelector("div.phone-check");
+inputPhone.addEventListener("input", (e) => {
+    if (inputPhone.value.trim() === "") {
+        codeSendBtn.disabled = true;
+    } else {
+        codeSendBtn.disabled = false;
+    }
+});
+
+codeSendBtn.addEventListener("click", (e) => {
+    if (!codeSendCheck) return;
+    clearInterval(timer);
+    time = 5 * 60;
+
+    codeSendCheck = false;
+    codeInputWrap.style.display = "block";
+    timer = setInterval(updateTimer, 1000);
+    updateTimer(timer);
+});
+
+let result = null;
+
+codeSendBtn.addEventListener("click", async (e) => {
+    const phone = inputPhone.value;
+    result = await memberService.checkPhone(phone);
+
+    console.log(result.code);
+});
+
+code.addEventListener("input", (e) => {
+    if (code.value.trim() === "") {
+        codeCheckBtn.disabled = true;
+    } else {
+        codeCheckBtn.disabled = false;
+    }
+});
+
+codeCheckBtn.addEventListener("click", (e) => {
+    //코드 체크 성공 시
+    if (code.value === result.code) {
+        inputPhone.readOnly = true;
+        clearInterval(timer);
+        codeInputWrap.style.display = "none";
+        const errorTag = document.querySelector("div.error-text-phone");
+        errorTag.style.display = "block";
+        errorTag.firstElementChild.textContent = "";
+
+        codeSendBtn.disabled = true;
+    } else {
+        codeSendCheck = true;
+        code.classList.add("error");
+        const errorTag = document.querySelector("div.error-text-phone");
+        errorTag.style.display = "block";
+        errorTag.firstElementChild.textContent = "인증번호가 다릅니다.";
+    }
+});
+
+
 // 생년월일 확인
 
 const birthInput = document.querySelector("input.birth");
@@ -218,6 +327,11 @@ function validateForm() {
 
     // MBTI 검사
     if (mbtiError.style.display === "block") {
+        return false;
+    }
+
+    // 휴대폰 인증 확인 (readOnly 아니면 아직 미완료)
+    if (!inputPhone.readOnly) {
         return false;
     }
 

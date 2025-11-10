@@ -6,7 +6,7 @@ const passwordLayout = (() => {
          text = `
             <div class="form-wrap-desc">
                 <span style="font-size: 17px;">비밀번호를 재설정 해주세요.</span><br><br>
-                영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요. 나중에 수정
+                영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요.
             </div>
             <form name="number-temp" action="/member/forgot-password" method="post">
                 <div class="password-input-wrap">

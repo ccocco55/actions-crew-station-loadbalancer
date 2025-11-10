@@ -1,18 +1,27 @@
 // ===================== Member Service =====================
-// const memberService = (() => {
-//     const getProfile = async (memberId) => {
-//         try {
-//             const response = await fetch(`/api/member/${memberId}`);
-//             if (!response.ok) throw new Error(`Error: ${response.status}`);
-//             return await response.json();
-//         } catch (error) {
-//             console.error("getProfile Error:", error);
-//             return null;
-//         }
-//     };
-//
-//     return { getProfile : getProfile };
-// })();
+const memberProfileService = (() => {
+    // 마이페이지 - 로그인된 멤버 프로필 조회
+    const getMyPageProfile = async () => {
+        try {
+            const response = await fetch(`/api/mypage/profile`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (!response.ok) throw new Error(`Error: ${response.status}`);
+            return await response.json(); // MemberProfileDTO 응답
+        } catch (error) {
+            console.error("getMyPageProfile Error:", error);
+            return null;
+        }
+    };
+
+    return {
+        getMyPageProfile: getMyPageProfile
+    };
+})();
+
 
 
 // ===================== Reply Service =====================

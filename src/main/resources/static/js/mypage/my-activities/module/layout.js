@@ -9,7 +9,7 @@ const likeLayout = (() => {
                 <div class="card-writer">
                     <div class="card-item-writer-content">
                         <div class="card-item-writer-header">
-                            <a class="card-writer-link">
+                            <a class="card-writer-link" href="/member/profile/${diary.memberId}">
                                 <img src="${diary.memberProfileImage || '/images/crew-station-icon-profile.png'}" 
                                      alt="" class="card-writer-img">
                                 <span class="writer-name">${diary.memberName}</span>

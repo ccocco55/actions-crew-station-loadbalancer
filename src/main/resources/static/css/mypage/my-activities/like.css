@@ -417,23 +417,25 @@ div.card-item-description-content{
 div.card-collection-item-img{
     flex: 0 0 auto;
 }
-div.card-item-img{
-    padding-bottom: 100%;
-    border-radius: 6px;
+div.card-item-img {
     position: relative;
     width: 100%;
-    background-color: #ededed;
+    height: 0;
+    padding-bottom: 100%; /* 정사각형 비율 유지 */
+    border-radius: 6px;
     overflow: hidden;
+    background-color: #ededed;
 }
 
-div.card-item-img img.image{
+div.card-item-img img.image {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
     width: 100%;
-    transform: translate(-50%, -50%);
-    transition: transform .2s;
-    border: 0;
+    height: 100%;
+    object-fit: cover; /* 이미지를 비율 유지하며 꽉 채움 */
+    transform: none; /* 기존 translate 제거 */
+    transition: transform 0.2s;
 }
 
 span.card-item-img-icon{
@@ -488,9 +490,8 @@ button.card-item-action-btn:hover svg{
 
 
 
-div.card-collection-item-content:hover div.card-item-img > img{
-    transform: translate(-50%, -50%) scale(1.03);
-
+div.card-collection-item-content:hover div.card-item-img > img {
+    transform: scale(1.05);
 }
 
 div.card-collection-item-content:hover div.card-item-description  div.card-item-description-content span{

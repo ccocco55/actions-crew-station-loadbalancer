@@ -12,10 +12,13 @@ create table tbl_member
     member_status       status          default 'active',
     member_provider     member_provider default 'crewstation',
     social_img_url       varchar(255),
-    member_social_email varchar(255) unique,
+    member_social_email varchar(255),
     member_description  varchar(255),
     member_role         member_role     default 'member',
     chemistry_score int default 70,
     created_datetime    timestamp       default now(),
     updated_datetime    timestamp       default now()
 );
+
+ALTER TABLE tbl_member
+    DROP CONSTRAINT tbl_member_member_social_email_key;

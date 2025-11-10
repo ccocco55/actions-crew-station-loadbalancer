@@ -34,7 +34,7 @@
             </div>
             <!-- 프로필 -->
             <div class="profile-container">
-                <a class="profile-a">
+                <a class="profile-a" th:href="@{/member/profile/{id}(id=${diary.diary.memberId})}">
                     <div class="profile-img">
                         <th:block th:if="${diary.diary.memberFilePath != null}">
                             <img class="product-seller-profile-img" th:src="@{${diary.diary.memberFilePath}}">
@@ -69,7 +69,7 @@
                     <span class="diary-content-text">
                         <span>
                             <th:block th:each="section, iterStat : ${diary.sections}">
-                                <div th:id="'target' + ${iterStat.index + 1}"
+                                <div th:id="'target_' + ${iterStat.index}"
                                      class="target"
                                      th:text="${section.postContent}">
                                 </div>
@@ -83,9 +83,9 @@
                     <div class="images">
                         <div class="images-inner">
                             <div class="image-items">
-                                <div class="image-wrap" th:each="section :${diary.sections}"  th:if="${section.filePath !=null}">
+                                <div class="image-wrap" th:each="section, iterStat :${diary.sections}"  th:if="${section.filePath !=null}">
                                     <div class="image">
-                                            <img class="diary-img" th:src="@{${section.filePath}}">
+                                            <img class="diary-img"  th:src="@{${section.filePath}}" th:id="'image_' +${iterStat.index}">
                                         <div class="mention" th:each="tag :${section.tags}" th:style="'left:' + ${tag.tagLeft} +'%; top:' + ${tag.tagTop}+'%;' ">
                                             <div class="mention-container">
                                                 <button class="mention-button">
@@ -97,13 +97,13 @@
                                                 <div class="mention-profile">
                                                     <a class="profile-a" th:attr="data-id=${tag.memberId}">
                                                         <th:block th:if="${tag.filePath != null}">
-                                                            <img class="product-seller-profile-img" th:src="@{${tag.filePath}}">
+                                                            <img class="product-seller-profile-img" style="width: auto;" th:src="@{${tag.filePath}}">
                                                         </th:block>
                                                         <th:block th:if="${tag.filePath == null and tag.socialImgUrl !=null}">
-                                                            <img class="product-seller-profile-img" th:src="@{${tag.socialImgUrl}}">
+                                                            <img class="product-seller-profile-img" style="width: auto;" th:src="@{${tag.socialImgUrl}}">
                                                         </th:block>
                                                         <th:block th:if="${tag.filePath == null and tag.socialImgUrl ==null}">
-                                                            <img class="product-seller-profile-img" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c">
+                                                            <img class="product-seller-profile-img" style="width: auto;" src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/default_images/avatar.png?w=144&h=144&c=c">
                                                         </th:block>
                                                         <span id="mention-name" th:text="${tag.memberName}"></span>
                                                     </a>
@@ -176,7 +176,8 @@
                     <div class="sticky-wrap">
                         <button id="postId" class="sticky-like-button" th:attr="data-post=${diary.diary.postId}">
                                 <span class="like-icon">
-                                    <span class="like-before" th:classappend="${diary.diary.likeId} ? 'active': ''" ></span>
+
+                                    <span class="like-before" th:classappend="${diary.diary.likeId != null} ? 'active': ''" ></span>
                                 </span>
                             <span class="like-total" th:text="${diary.diary.diaryLikeCount}">1</span>
                         </button>
@@ -358,6 +359,9 @@
 </div>
 
 </body>
+<script src="/js/fixed/web/footer/module/service.js"></script>
+<script src="/js/fixed/web/footer/module/layout.js"></script>
+<script src="/js/fixed/web/footer/event.js"></script>
 <script src="/js/fixed/web/header/module/service.js"></script>
 <script src="/js/fixed/web/header/event.js"></script>
 <script src="/js/reply/module/service.js"></script>

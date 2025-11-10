@@ -633,7 +633,7 @@ div.card-item-writer-content{
     font-style: normal;
     font-weight: 400;
     flex: 0 0 auto;
-    margin-top: -5px;
+    /*margin-top: -5px;*/
     font-size: 15px;
     line-height: 19px;
 }

@@ -73,4 +73,40 @@
                  left join tbl_member reporter on reporter.id = r.member_id
                  left join tbl_member writer on writer.id = p.member_id
     </select>
+
+<!--  동행 신고 목록  -->
+    <select id="selectAllReportAccompany">
+        select
+            r.created_datetime as createdDatetime,
+            r.report_content as reportContent,
+            r.report_process_status as processStatus,
+            r.id as reportId,
+            pa.post_title as postTitle,
+            pa.id as postId,
+            a.accompany_status,
+            reporter.member_email        as reporterEmail,
+            reporter.member_social_email as reporterSocialEmail,
+            writer.member_email          as writerEmail,
+            writer.member_social_email   as writerSocialEmail
+
+        from view_report_post_report r
+                join tbl_post pa on pa.id = r.post_id
+                join tbl_accompany a on a.post_id = pa.id and a.accompany_status = #{search.accompanyStatus}
+                join tbl_member reporter on r.member_id = reporter.id
+                join tbl_member writer on pa.member_id = writer.id
+
+        limit #{scrollCriteria.size} offset #{scrollCriteria.offset}
+    </select>
+
+    <select id="selectReportAccompanyCount">
+        select count(*)
+        from view_report_post_report r
+            join tbl_post pa on pa.id = r.post_id
+            join tbl_accompany a on a.post_id = pa.id and a.accompany_status= #{accompanyStatus}
+            join tbl_member reporter on r.member_id = reporter.id
+            join tbl_member writer on pa.member_id = writer.id
+
+    </select>
+
+
 </mapper>

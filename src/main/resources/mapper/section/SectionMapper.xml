@@ -16,7 +16,7 @@
         from tbl_post_section tps
                  left join view_file_post_section_file vfpsf on tps.id = vfpsf.post_section_id
         where post_id = #{postId}
-
+        order by tps.id
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="postSectionId">

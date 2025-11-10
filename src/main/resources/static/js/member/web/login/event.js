@@ -54,11 +54,8 @@ button.addEventListener('click', async () => {
 
 const guestButton = document.querySelector(".login-guest-btn");
 
-// window.onpageshow = async function(event){
-//     if(event.persisted || (window.performance && window.performance.navigation.type == 2)){
+
 memberService.resetCookies();
-    // }
-// }
 
 
 guestButton.addEventListener("click", async(e) => {

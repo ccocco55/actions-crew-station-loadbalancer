@@ -60,20 +60,22 @@
     <select id="selectLatestAlarms">
         (
             select
-                ma.id               as alarmId,
-                'MEMBER'            as alarmType,
-                ma.alarm_status     as alarmStatus,
-                ma.created_datetime as createdAt
+                ma.id               as id,
+                null                as foreignId,
+                ma.alarm_status     as readStatus,
+                ma.created_datetime as createdDatetime,
+                ma.updated_datetime as updatedDatetime
             from tbl_member_alarm ma
             where ma.member_id = #{memberId}
         )
         union all
         (
             select
-                da.id               as alarmId,
-                'DIARY'             as alarmType,
-                da.alarm_status     as alarmStatus,
-                da.created_datetime as createdAt
+                da.id               as id,
+                null                as foreignId,
+                da.alarm_status     as readStatus,
+                da.created_datetime as createdDatetime,
+                da.updated_datetime as updatedDatetime
             from tbl_diary_alarm da
                      join tbl_diary d on d.post_id = da.diary_id
                      join tbl_post  p on p.id = d.post_id
@@ -82,10 +84,11 @@
         union all
         (
             select
-                la.id               as alarmId,
-                'LIKE'              as alarmType,
-                la.alarm_status     as alarmStatus,
-                la.created_datetime as createdAt
+                la.id               as id,
+                null                as foreignId,
+                la.alarm_status     as readStatus,
+                la.created_datetime as createdDatetime,
+                la.updated_datetime as updatedDatetime
             from tbl_like_alarm la
                      join tbl_like  l on l.id = la.like_id
                      join tbl_post  p on p.id = l.post_id
@@ -94,16 +97,18 @@
         union all
         (
             select
-                psa.id              as alarmId,
-                'PAYMENT'           as alarmType,
-                psa.alarm_status    as alarmStatus,
-                psa.created_datetime as createdAt
+                psa.id              as id,
+                null                as foreignId,
+                psa.alarm_status    as readStatus,
+                psa.created_datetime as createdDatetime,
+                psa.updated_datetime as updatedDatetime
             from tbl_payment_status_alarm psa
                      join tbl_payment_status ps on ps.id = psa.payment_status_id
             where ps.member_id = #{memberId}
         )
-        order by createdAt desc
+        order by createdDatetime desc
     </select>
+
 
     <update id="markAlarmAsRead">
         <choose>

@@ -9,7 +9,7 @@ const bannerLayout = (() => {
                 <img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;">
               </div>
               <div class="reg-actions" style="display:flex;gap:6px;align-items:center;">
-                <button class="reg-btn" data-action="replace">이미지교체</button>
+<!--                <button class="reg-btn" data-action="replace">이미지교체</button>-->
                 <button class="reg-btn" data-action="delete" data-banner-id="${id}">삭제</button>
                 <span class="reg-handle" style="cursor:grab;">::</span>
               </div>

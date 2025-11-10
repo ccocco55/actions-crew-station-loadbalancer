@@ -17,5 +17,19 @@ const memberService = (() => {
         }
 
     }
-    return {checkEmail: checkEmail}
+    const checkPhone = async (phone) => {
+        const response = await fetch(`/api/member/phone-check?phone=${phone}`, {
+            method:"POST"
+        })
+
+        if (response.ok) {
+            const code = await response.json();
+            return code;
+        } else {
+            console.error("에러 상태 코드:", response.status);
+
+        }
+    }
+
+    return {checkEmail: checkEmail, checkPhone:checkPhone}
 })();

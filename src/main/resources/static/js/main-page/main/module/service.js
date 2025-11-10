@@ -1,6 +1,6 @@
 const likeService = (() => {
     const addLike = async (postId) => {
-        const res = await fetch("/api/likes", {
+        const res = await fetch(`/api/likes/${postId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ postId }),
@@ -17,5 +17,5 @@ const likeService = (() => {
         return await res.text();
     };
 
-    return { addLike, removeLike };
+    return { addLike : addLike, removeLike : removeLike };
 })();

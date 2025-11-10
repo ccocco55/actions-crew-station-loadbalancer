@@ -55,7 +55,8 @@ function startCountdown() {
 }
 
 let page = 1;
-let keyword = "";
+const urlParams = new URLSearchParams(window.location.search);
+let keyword = urlParams.get('keyword') || "";
 let timerIndex = 0;
 let checkMore = true;
 let checkScroll = true;
@@ -63,6 +64,7 @@ const showList = async (page = 1, keyword = "", index = 0) => {
     console.log("시작")
     purchases = await purchaseListService.getPurchases(purchaseListLayout.showPurchases, page, keyword);
     keyword = purchases.search.keyword;
+    checkMore = purchases.criteria.hasMore;
     console.log(purchases)
     console.log(keyword)
     console.log("종료")

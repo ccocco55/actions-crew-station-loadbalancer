@@ -120,7 +120,7 @@ values ('multi',1),('multi',1),('multi',1)
 select * from tbl_member;
 
 insert into tbl_address(address_zip_code, address_detail, address, member_id)
-values (06226,'서울특별시 강남구 역삼동 771','서울특별시 강남구 역삼로 234 (역삼동)',2);
+values (06226,'서울특별시 강남구 역삼동 771','서울특별시 강남구 역삼로 234 (역삼동)',17);
 
 
 EXPLAIN ANALYZE

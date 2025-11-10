@@ -8,5 +8,3 @@ create table tbl_diary_country
     constraint fk_diary_country_tbl_diary foreign key (post_id)
         references tbl_diary (post_id)
 );
-
-

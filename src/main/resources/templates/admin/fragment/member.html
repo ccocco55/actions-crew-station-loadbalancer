@@ -49,7 +49,7 @@
                             </tr>
                             </thead>
                             <tbody id="membersTbody">
-                            <tr><td colspan="7" class="text-center text-muted">불러오는 중...</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted">불러오는 중</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -89,8 +89,8 @@
                                                         <tbody>
                                                         <tr><th>이름</th><td><span id="memberDetailName"></span></td></tr>
                                                         <tr><th>핸드폰 번호</th><td><span id="memberDetailPhone"></span></td></tr>
-                                                        <tr><th>MBTI</th><td></td></tr>
-                                                        <tr><th>생년월일</th><td></td></tr>
+                                                        <tr><th>MBTI</th><td><span id="memberDetailMbti"></span></td></tr>
+                                                        <tr><th>생년월일</th><td><span id="memberDetailBirth"></span></td></tr>
                                                         <tr><th>가입일</th><td><span id="memberDetailCreatedDatetime"></span></td></tr>
                                                         <tr><th>제공자</th><td><span id="memberDetailProvider"></span></td></tr>
                                                         </tbody>
@@ -102,9 +102,9 @@
                                                         <tbody>
                                                         <tr><th>회원ID</th><td><span id="memberDetailId"></span></td></tr>
                                                         <tr><th>이메일</th><td><span id="memberDetailEmail"></span></td></tr>
-                                                        <tr><th>최근 접속</th><td></td></tr>
-                                                        <tr><th>성별</th><td></td></tr>
-                                                        <tr><th>주소</th><td></td></tr>
+                                                        <tr><th>최근 접속</th><td><span id="memberDetailRecent"></span></td></tr>
+                                                        <tr><th>성별</th><td><span id="memberDetailGender"></span></td></tr>
+                                                        <tr><th>권한</th><td><span id="memberDetailRole"></span></td></tr>
                                                         <tr><th>상태</th><td><span id="memberDetailStatus"></span></td></tr>
                                                         </tbody>
                                                     </table>
@@ -113,42 +113,42 @@
                                         </div>
 
                                         <!-- 회원 게시글 -->
-                                        <div class="info-layout detail-info">
-                                            <div class="info-title d-flex justify-content-between">
-                                                <a href="#" class="info-detail">
-                                                    <div class="title">작성 게시글 <i class="mdi mdi-menu-left ml-2"></i></div>
-                                                </a>
-                                            </div>
-                                            <table class="info-table">
-                                                <thead>
-                                                <tr>
-                                                    <th>게시글 제목</th>
-                                                    <th>게시글 내용</th>
-                                                    <th>작성 일자</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="memberPostTbody"></tbody>
-                                            </table>
-                                        </div>
+<!--                                        <div class="info-layout detail-info">-->
+<!--                                            <div class="info-title d-flex justify-content-between">-->
+<!--                                                <a href="#" class="info-detail">-->
+<!--                                                    <div class="title">작성 게시글 <i class="mdi mdi-menu-left ml-2"></i></div>-->
+<!--                                                </a>-->
+<!--                                            </div>-->
+<!--                                            <table class="info-table">-->
+<!--                                                <thead>-->
+<!--                                                <tr>-->
+<!--                                                    <th>게시글 제목</th>-->
+<!--                                                    <th>게시글 내용</th>-->
+<!--                                                    <th>작성 일자</th>-->
+<!--                                                </tr>-->
+<!--                                                </thead>-->
+<!--                                                <tbody id="memberPostTbody"></tbody>-->
+<!--                                            </table>-->
+<!--                                        </div>-->
 
-                                        <!-- 회원 댓글 -->
-                                        <div class="info-layout detail-info">
-                                            <div class="info-title d-flex justify-content-between">
-                                                <a href="#" class="info-detail">
-                                                    <div class="title">작성 댓글 <i class="mdi mdi-menu-left ml-2"></i></div>
-                                                </a>
-                                            </div>
-                                            <table class="info-table">
-                                                <thead>
-                                                <tr>
-                                                    <th>게시글 제목</th>
-                                                    <th>댓글 내용</th>
-                                                    <th>작성 일자</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="memberCommentTbody"></tbody>
-                                            </table>
-                                        </div>
+<!--                                        &lt;!&ndash; 회원 댓글 &ndash;&gt;-->
+<!--                                        <div class="info-layout detail-info">-->
+<!--                                            <div class="info-title d-flex justify-content-between">-->
+<!--                                                <a href="#" class="info-detail">-->
+<!--                                                    <div class="title">작성 댓글 <i class="mdi mdi-menu-left ml-2"></i></div>-->
+<!--                                                </a>-->
+<!--                                            </div>-->
+<!--                                            <table class="info-table">-->
+<!--                                                <thead>-->
+<!--                                                <tr>-->
+<!--                                                    <th>게시글 제목</th>-->
+<!--                                                    <th>댓글 내용</th>-->
+<!--                                                    <th>작성 일자</th>-->
+<!--                                                </tr>-->
+<!--                                                </thead>-->
+<!--                                                <tbody id="memberCommentTbody"></tbody>-->
+<!--                                            </table>-->
+<!--                                        </div>-->
                                     </div>
                                 </div>
                             </div>

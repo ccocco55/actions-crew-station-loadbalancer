@@ -73,9 +73,9 @@ body, html {
     background-color: hsla(0, 0%, 55%, .1);
 }
 
-head {
-    display: none;
-}
+/*head {*/
+/*    display: none;*/
+/*}*/
 
 body {
     font-family: Arial, NotoSansKr, Noto Sans, sans-serif;
@@ -404,11 +404,11 @@ ul {
     padding-top: 14px;
 }
 
-.tab-view .tab-view-header {
-    background-color: #fff;
-    border-radius: 10px 10px 0 0;
-    padding: 0 20px;
-}
+/*.tab-view .tab-view-header {*/
+/*    background-color: #fff;*/
+/*    border-radius: 10px 10px 0 0;*/
+/*    padding: 0 20px;*/
+/*}*/
 
 .tab-view .tab-view-header .tab-switch-row {
     box-shadow: none;
@@ -1248,7 +1248,7 @@ a:-webkit-any-link {
 
 #bootpay-header .header-menu-group {
     padding: 20px 30px 0 0;
-    margin-left: 476% !important;
+    /*margin-left: 476% !important;*/
 }
 
 #bootpay-header .header-menu-btn {
@@ -1305,9 +1305,6 @@ a:-webkit-any-link {
     padding: 0 12px;
 }
 
-/* 관리자 상단 이메일 클릭 시 */
-/* 기준 잡기 위해 넣어둠 */
-/* 유저 메뉴 컨테이너를 위치 기준으로 */
 #bootpay-header .user-menu { position: relative; }
 
 /* 전역 dropdown 규칙 무력화: 이 블록만 강제 우측 정렬 */
@@ -1343,7 +1340,7 @@ a:-webkit-any-link {
   .td-actions { text-align: right; }
   .td-actions .status-badge { margin-right:8px; }
   .td-actions .btn { vertical-align: middle; }
-  
+
 
 /* 배지 */
 .status-badge{display:inline-block;padding:6px 10px;border-radius:14px;font:700 12px/1.1 sans-serif}
@@ -1428,7 +1425,6 @@ a:-webkit-any-link {
   color: #fff;
 }
 
-/* 호버 피드백(미묘한 포커스 링) */
 .report-modal .modal-footer button:hover{
   box-shadow: 0 0 0 3px rgba(80,124,243,.10);
 }
@@ -1440,17 +1436,14 @@ a:-webkit-any-link {
 
 
 
-/* =========================
-   탭(버튼) 스타일 – pill 형태
-   ========================= */
    .report-tabs{
     display: flex;
     gap: 16px;
     padding: 14px 8px 0;
   }
-  
+
   .report-tabs .tab-switch{
-    position: relative;         /* 구분선/본문 위로 배치 */
+    position: relative;
     z-index: 3;
     display: inline-flex;
     align-items: center;
@@ -1471,83 +1464,162 @@ a:-webkit-any-link {
       box-shadow .15s,
       transform .05s;
   }
-  
+
   .report-tabs .tab-switch:hover{
     background: #f8faff;
     border-color: #dbe3ff;
   }
-  
+
   .report-tabs .tab-switch:active{
     transform: translateY(1px);
   }
-  
+
   .report-tabs .tab-switch.active{
     border-color: #507cf3;
     background: linear-gradient(180deg, #5f86ff 0%, #507cf3 100%);
     color: #fff !important;
-    text-shadow: 0 1px 0 rgba(0,0,0,.18);
-    box-shadow:
-      0 18px 40px rgba(80,124,243,.24),
-      inset 0 -2px 0 rgba(0,0,0,.06);
   }
-  
-  /* 옵션: 스몰 사이즈 */
+
   .report-tabs .tab-switch.tab--sm{
     height: 44px;
     min-width: 112px;
     border-radius: 16px;
   }
-  
-  /* ===================================
-     탭 헤더/바디 레이아웃 & 구분선 처리
-     =================================== */
-  
-  /* 헤더(버튼 영역): 버튼이 위, 잘림 방지 */
+
+
   .tab-view .tab-view-header{
     position: relative;
-    z-index: 2;          /* 버튼(헤더) > 본문 구분선 */
-    padding: 10px 20px 20px;   /* 버튼 아래 여유 */
+    z-index: 1;
+    padding: 10px 20px 20px;
     border: 0;
     box-shadow: none;
-    overflow: visible !important;   /* 그림자 잘림 방지 */
+    overflow: visible !important;
   }
-  
-  /* 헤더 안의 행(기존 밑줄/음수 마진 제거) */
+
   .tab-view .tab-view-header .tab-switch-row{
     display: flex;
     gap: 16px;
     margin: 0;
-    padding: 8px 0 10px; /* 버튼-라인 간격 */
+    padding: 8px 0 10px;
     border: 0;
     box-shadow: none;
     overflow: visible;
   }
-  
-  /* 본문: 최상단 1px 구분선(버튼 아래) */
+
   .tab-view .tab-view-body{
     position: relative;
-    z-index: 1;         /* 헤더보다 아래 */
-    margin-top: 8px;    /* 헤더와 간격 */
+    z-index: 1;
+    margin-top: 8px;
     overflow: visible;
   }
-  
+
   .tab-view .tab-view-body::before{
     content: "";
     position: absolute;
     left: 0; right: 0; top: 0;
     height: 1px;
-    background: #edf0f3;  /* 구분선 색 */
-    z-index: 0;
+    background: #edf0f3;
+    z-index: 2;
   }
-  
+.tab-view .tab-view-header .tab-switch-row .tab-switch:not(.active){
+    border-bottom: 2px solid #edf0f3;
+}
 
-  /* 탭 헤더는 굳이 z-index가 필요 없음 */
+
 .tab-view .tab-view-header,
 .tab-view .tab-view-body,
 .tab-view .tab-view-header .tab-switch-row,
 .report-tabs .tab-switch {
-  z-index: auto !important;   /* 기존 z-index:2 / 3 제거 */
+  z-index: auto !important;
 }
 
-/* 혹시 position으로 스태킹이 생겼다면 굳이 relative도 필요 없음 */
 .tab-view .tab-view-header { position: static !important; }
+
+
+.project-setting-index .page-body .tab-view .tab-view-header {
+    padding-left: 30px;
+    padding-top: 14px;
+}
+
+/*.tab-view .tab-view-header {*/
+/*    background-color: #fff;*/
+/*    border-radius: 10px 10px 0 0;*/
+/*    padding: 0 20px;*/
+/*}*/
+
+.tab-view .tab-view-header .tab-switch-row {
+    box-shadow: none;
+    padding-top: 10px;
+    position: relative;
+}
+
+.list-inline, .list-unstyled {
+    list-style: none;
+    padding-left: 0;
+}
+
+dl, ol, ul {
+    margin-top: 0;
+}
+
+.project-setting-index .page-body .tab-view .tab-view-header ul.tab-switch-row li.tab-switch.tab-project:not(.tab-label) {
+    background-color: rgba(80, 124, 243, .07);
+}
+
+.project-setting-index .page-body .tab-view .tab-view-header ul.tab-switch-row li.tab-switch {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.tab-view .tab-view-header .tab-switch-row .tab-switch.active {
+    border-bottom: 2px solid #507cf3;
+    color: #507cf3;
+    font-weight: 700;
+}
+
+.tab-view .tab-view-header .tab-switch-row .tab-switch {
+    border-bottom: 2px solid transparent;
+    color: #56626a;
+    display: inline-block;
+    padding: 8px 30px;
+}
+
+/*.tab-view .tab-view-body {*/
+/*    background-color: #fff;*/
+/*    border-radius: 0 0 10px 10px;*/
+/*    padding: 0 20px;*/
+/*}*/
+
+.project-setting-index .tab-wrapper.tab-project-setting-member {
+    display: flex;
+    flex-direction: column;
+    font-size: .9rem;
+    min-height: 500px;
+}
+
+.project-setting-index .tab-wrapper.tab-project-setting-member table.table-roles {
+    margin-top: 20px;
+}
+
+/* 공통 배지 */
+.status-badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:9999px;
+    font-weight:600;
+    font-size:12px;
+    line-height:1;
+    vertical-align:middle;
+}
+
+/* 처리완료 */
+.status-done{
+    color:#2bb69a;       /* 텍스트 */
+    background:#e6faf4;  /* 연한 민트 배경 */
+}
+
+/* 대기중 */
+.status-pending{
+    color:#ff9f1a;       /* 텍스트 */
+    background:#fff3e0;  /* 연한 주황 배경 */
+}

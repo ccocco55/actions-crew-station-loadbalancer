@@ -11,45 +11,41 @@
 </head>
 <body>
 <header th:replace="~{fixed/web/header :: header}"></header>
-    <div class="page">
-        <div class="layout">
-            <main class="main-container">
-                <h1 class="alarm-title">내 소식</h1>
-                <!-- 빈 값 -->
-                <div class="alarm-container" th:if="${#lists.isEmpty(alarms)}">
-                    <p class="alarm-empty">최근 내 소식이 없습니다.</p>
-                </div>
-                <!-- 빈 값 -->
-                <!-- 존재 -->
-                <div>
-                    <div class="alarm-container" th:if="${!#lists.isEmpty(alarms)}">
-                        <div class="alarm-wrap"
-                             th:each="alarm : ${alarms}"
-                             th:classappend="${alarm.alarmStatus == 'unread'} ? ' unread' : ' read'">
-                            <a href="#" class="user-profile-link">
-                                <img src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/users/profile_images/1512439280629_knGlCsma.jpg?w=80&h=80&c=c&webp=1" alt="">
-                            </a>
-                            <a href="" class="alarm-content-link"
-                               th:attr="data-id=${alarm.alarmId}, data-type=${alarm.alarmType}">
-                                <div class="alarm-content-link-wrap">
-                                    <span class="alarm-content"
-                                          th:text="'새로운 ' + ${alarm.alarmType.toLowerCase()} + ' 알림이 도착했어요!'">
-                                        커뮤니티에 게시글이 업로드되었어요!
-                                    </span>
-                                    <span class="alarm-date"
-                                          th:text="${#temporals.format(alarm.createdAt, 'MM-dd HH:mm')}">
-                                        1분
-                                    </span>
-                                </div>
-                            </a>
+<div class="page">
+    <div class="layout">
+        <main class="main-container">
+            <h1 class="alarm-title">내 소식</h1>
 
+            <!-- 빈 값 -->
+            <div class="alarm-container" th:if="${#lists.isEmpty(alarms)}">
+                <p class="alarm-empty">최근 내 소식이 없습니다.</p>
+            </div>
+
+            <!-- 존재 -->
+            <div class="alarm-container" th:if="${!#lists.isEmpty(alarms)}">
+                <div class="alarm-wrap"
+                     th:each="alarm : ${alarms}"
+                     th:classappend="${alarm.readStatus.name() == 'UNREAD'} ? ' unread' : ' read'">
+                    <a href="#" class="user-profile-link">
+                        <img src="https://image.ohousecdn.com/i/bucketplace-v2-development/uploads/users/profile_images/1512439280629_knGlCsma.jpg?w=80&h=80&c=c&webp=1" alt="">
+                    </a>
+                    <a href="#" class="alarm-content-link"
+                       th:attr="data-id=${alarm.id}, data-type='default'">
+                        <div class="alarm-content-link-wrap">
+                                <span class="alarm-content">
+                                    새로운 알림이 도착했어요!
+                                </span>
+                            <span class="alarm-date"
+                                  th:text="${alarm.createdDatetime}">
+                                    1분 전
+                                </span>
                         </div>
-                    </div>
+                    </a>
                 </div>
-                <!-- 존재 -->
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
+</div>
 </body>
 <script src="/js/main-page/alarm/layout.js"></script>
 <script src="/js/fixed/web/header/module/service.js"></script>

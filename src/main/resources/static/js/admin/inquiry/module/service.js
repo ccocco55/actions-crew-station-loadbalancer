@@ -1,6 +1,4 @@
-// ===== 문의 관리 Service =====
 const inquireService = (() => {
-    const BASE = '/api/admin/inquiries';
 
     const getList = async (opt = {}) => {
         const { keyword = '', category = '' } = opt || {};
@@ -8,7 +6,7 @@ const inquireService = (() => {
         if (keyword)  qs.set('keyword', keyword);
         if (category) qs.set('category', category);
 
-        const res = await fetchWithRefresh(`${BASE}?${qs.toString()}`, {
+        const res = await fetchWithRefresh(`${'/api/admin/inquiries'}?${qs.toString()}`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -17,16 +15,16 @@ const inquireService = (() => {
     };
 
     const getDetail = async (id) => {
-        const res = await fetchWithRefresh(`${BASE}/${encodeURIComponent(id)}`, {
+        const res = await fetchWithRefresh(`${'/api/admin/inquiries'}/${encodeURIComponent(id)}`, {
             method: 'GET',
             credentials: 'include',
         });
         if (!res.ok) throw new Error('문의 상세 로드 실패');
-        return await res.json(); // AskDTO
+        return await res.json();
     };
 
     const postReply = async (id, replyContent) => {
-        const res = await fetchWithRefresh(`${BASE}/${encodeURIComponent(id)}/reply`, {
+        const res = await fetchWithRefresh(`${'/api/admin/inquiries'}/${encodeURIComponent(id)}/reply`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

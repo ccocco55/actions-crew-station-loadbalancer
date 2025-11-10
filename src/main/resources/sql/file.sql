@@ -9,5 +9,3 @@ create table tbl_file
     updated_datetime timestamp default now()
 );
 
-insert into tbl_file (file_origin_name, file_path, file_name, file_size)
-values ('1','../../','1','1');

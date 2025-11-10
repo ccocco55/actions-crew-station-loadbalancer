@@ -394,7 +394,7 @@ const addPairWithFile = () => {
     block = sampleBlock.cloneNode(true);
     block.querySelector(".content-del").style.display = "block";
     resetBlock(block);
-    fileBuffer.push("");
+    console.log(fileBuffer.length+"입니다.")
     // }
     block.dataset.idx = String(idx);
     const beforeBlk = findBlockBefore(idx);
@@ -549,8 +549,8 @@ contentList?.addEventListener("click", (e) => {
                 delete block.dataset.fileid;
             }
             if (block.dataset?.postsectionid) {
-                deleteSections.push(block.dataset.postsectionid)
-                delete block.dataset.postsectionid;
+                // deleteSections.push(block.dataset.postsectionid)
+                // delete block.dataset.postsectionid;
             }
 
             previewIn(block, url);
@@ -881,11 +881,13 @@ complteBtn.addEventListener("click", (e) => {
         toastModal("나라를 추가해줴요.")
         return;
     }
-    countries.forEach((country, countryIndex) => {
+    let countryIndex = 0;
+    countries.forEach((country) => {
+
         if (country.dataset.countryId) return;
         console.log(country)
         const countryInput = document.createElement("input");
-        countryInput.name = `countries[${countryIndex}]`;
+        countryInput.name = `countries[${countryIndex++}]`;
         countryInput.value = country.textContent;
         form.appendChild(countryInput);
     });
@@ -895,6 +897,7 @@ complteBtn.addEventListener("click", (e) => {
     let oldCount = 0;
     let tagCount = 0;
     document.querySelectorAll(".post-img-content-wrapper").forEach((data) => {
+        tagCount = 0;
         console.log(data)
         const idx = +data.dataset.idx;
         newFileIndex = idx;
@@ -912,8 +915,10 @@ complteBtn.addEventListener("click", (e) => {
             console.log(fileBuffer)
             const file = fileBuffer[newFileIndex];
             const image = document.createElement("input");
+
             image.type = "file";
             image.name = `images[${count}].image`;
+
             const dt = new DataTransfer();
             if (file === '') {
                 image.value = ''; // 파일 input 초기화
@@ -954,12 +959,34 @@ complteBtn.addEventListener("click", (e) => {
             console.log("기존 이미지");
             console.log(newFileIndex);
             textarea.name = `oldImages[${oldCount}].postContent`;
+            const main = document.createElement("input");
+            main.name = `oldImages[${oldCount}].thumbnail`;
+            main.value = data.classList.contains("thumbnail") ? "main" : "sub";
+            form.appendChild(main);
             const ids = data.dataset.fileid;
             const fileInput = document.createElement("input");
             console.log(ids)
             fileInput.name = `oldImages[${oldCount}].fileId`;
             fileInput.value = ids ? ids : -1;
             form.appendChild(fileInput);
+            const fileSectionInput = document.createElement("input");
+            fileSectionInput.name= `oldImages[${oldCount}].image`;
+            fileSectionInput.type="file";
+            const file = fileBuffer[oldCount];
+            console.log(file);
+            console.log("출력된다::::::::::::")
+            const dt = new DataTransfer();
+            if (file === '') {
+                fileSectionInput.value = ''; // 파일 input 초기화
+            } else {
+                dt.items.add(file);
+                fileSectionInput.files = dt.files;
+            }
+            form.appendChild(fileSectionInput);
+            const inputSectionId = document.createElement("input");
+            inputSectionId.value = fileId;
+            inputSectionId.name = `oldImages[${oldCount}].postSectionId`;
+            form.appendChild(inputSectionId);
             const tags = imgItem.querySelectorAll(".img-tag-container.tag");
             tags.forEach((tag, tagIndex) => {
                 console.log(tag.dataset.tagId);
@@ -969,9 +996,8 @@ complteBtn.addEventListener("click", (e) => {
                 const inputTagX = document.createElement("input");
                 const inputTagY = document.createElement("input");
                 const inputTagMemberId = document.createElement("input");
-                const inputSectionId = document.createElement("input");
-                inputSectionId.value = fileId;
-                inputSectionId.name = `oldImages[${oldCount}].postSectionId`;
+
+
                 inputTagX.name = `oldImages[${oldCount}].tags[${tagCount}].tagLeft`;
                 inputTagY.name = `oldImages[${oldCount}].tags[${tagCount}].tagTop`;
                 inputTagMemberId.name = `oldImages[${oldCount}].tags[${tagCount}].memberId`;
@@ -980,7 +1006,7 @@ complteBtn.addEventListener("click", (e) => {
                 inputTagMemberId.value = tag.dataset.memberId;
                 console.log(inputTagX.value);
                 console.log(inputTagY.value);
-                form.appendChild(inputSectionId);
+
                 form.appendChild(inputTagX);
                 form.appendChild(inputTagY);
                 form.appendChild(inputTagMemberId);
@@ -1100,3 +1126,9 @@ setInterval(()=>{
     console.log(thumbnail);
     console.log(newThumbnail);
 },2000)
+
+
+const oldCount = document.querySelectorAll("li.post-img-content-wrapper").length;
+for (let i = 0; i < oldCount; i++) {
+    fileBuffer.push("");
+}

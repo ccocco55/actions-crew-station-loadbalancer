@@ -3,9 +3,9 @@ const bannerService = (() => {
         const res = await fetch("/api/admin/banner");
         const data = await res.json();
 
-        const items = data.map(d => ({
-            id:  d.bannerId ?? d.id ?? d.fileId ?? "",
-            url: d.url ?? d.presignedUrl ?? d.path ?? (typeof d === "string" ? d : "")
+        const items = data.map(data => ({
+            id:  data.bannerId ?? data.id ?? data.fileId ?? "",
+            url: data.url ?? data.presignedUrl ?? data.path ?? (typeof data === "string" ? data : "")
         }));
 
         console.log("items =", items);

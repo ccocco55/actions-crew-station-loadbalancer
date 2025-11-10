@@ -38,7 +38,7 @@
         view_post_purchase vpp on tm.id = vpp.member_id
         join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active'
         join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
-        where vpp.created_datetime + (vpp.purchase_limit_time || 'hour')::interval > now()
+        where vpp.created_datetime + (vpp.purchase_limit_time || 'hour')::interval > now() and vpp.purchase_product_count > 0
         <include refid="giftSearch"/>
         limit #{criteria.count} offset #{criteria.offset}
     </select>

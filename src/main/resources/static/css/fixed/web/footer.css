@@ -194,7 +194,7 @@ div.vertical-line{
 div.company-info-wrap{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, min-content);
+    grid-template-rows: repeat(5, min-content);
     grid-auto-flow: column;
     grid-column-gap: 8px;
     grid-row-gap: 20px;
@@ -275,7 +275,7 @@ a.social-img > svg{
     color: #828C94;
 }
 
-footer, header, main { position: static; z-index: 2000 }
+footer, header, main { position: static; }
 footer.footer-container {
     position: static;
     z-index: auto;
@@ -296,3 +296,141 @@ body {
 
 footer.footer-container { margin-top: auto; }
 
+.pageing-contianer-footer {
+    margin: 40px 0px 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prev-next-button-footer {
+    margin: 0px 10px 0px 0px;
+    background: none rgb(247, 249, 250);
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(194, 200, 204);
+    border: 1px solid rgb(234, 237, 239);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button-footer.active {
+    margin: 0px;
+    background: none;
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(47, 52, 56);
+    border: 1px solid rgb(230, 230, 230);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.prev-next-button-footer.active:hover {
+    background-color: rgb(247, 249, 250);
+}
+
+.prev-next-footer {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.prev-footer::before {
+    font-family: OhouseIcon;
+    vertical-align: top;
+    content: "\e965";
+}
+
+.next-footer::before {
+    font-family: OhouseIcon;
+    vertical-align: top;
+    content: "\e969";
+}
+
+.number-button-footer.active {
+    margin: 0px 10px 0px 0px;
+    border: none;
+    background: none #647FBC;
+    font-size: 14px;
+    line-height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 400;
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.number-button-footer.active:hover {
+    background-color: #566da5;
+}
+
+.number-button-footer {
+    background-color: rgb(247, 249, 250);
+    display: inline-block;
+    margin: 0px 10px 0px 0px;
+    border: none;
+    background: none;
+    height: 32px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 18px;
+    color: rgb(47, 52, 56);
+    font-weight: 500;
+    width: 32px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.number-button-footer:hover {
+    background-color: rgb(247, 249, 250);
+}
+
+
+.footer-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #ddd;
+    border-top: 3px solid #647FBC;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#footer-loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}

@@ -274,8 +274,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 주소 검색 버튼 클릭 이벤트
-    document.querySelector("#addressInput").addEventListener("click", (e) => {
+    // const addressWrap = document.querySelector("#addressWrap");
 
+    const modal = document.querySelector("#modal");
+    const openBtn = document.querySelector("#openBtn");
+    const closeBtn = document.querySelector("#closeBtn");
+    const addressWrap = document.querySelector("#addressWrap");
+    document.querySelector("#addressInput").addEventListener("click", (e) => {
+        modal.classList.remove("hidden");
         console.log(123)
         getAddressWindow();
     });
@@ -283,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const getAddressWindow = () => {
         new daum.Postcode({
             oncomplete: function (data) {
+                modal.classList.add("hidden");
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
                 // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
@@ -321,10 +328,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     document.querySelector("#detailAddress").value = '';
                 }
-            }
-        }).open();
+            },
+            width: '100%',
+            height: '100%'   // 부모 div 크기에 맞춤
+        }).embed(addressWrap);
     }
-
+    closeBtn.addEventListener("click", () => {
+        console.log(123);
+        modal.classList.add("hidden");
+    });
     // 슬라이드 로직
     let count = 1;
     const total = slides.length;

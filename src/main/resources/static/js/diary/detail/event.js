@@ -33,9 +33,10 @@ const modalImg = document.querySelector(".img-modal img");
 const closeBtn = document.querySelector(".img-close-button");
 
 targets.forEach((target, i) => {
-    if(images[i]){
+    let targetId = target.id.split("_")[1];
+    if(document.getElementById(`image_${targetId}`)){
         console.log(i)
-        const imgSrc = images[i].getAttribute("src");
+        const imgSrc = document.getElementById(`image_${targetId}`).getAttribute("src");
         target.addEventListener("click", () => {
             console.log("클릭이벤트")
             modalImg.setAttribute("src", imgSrc);

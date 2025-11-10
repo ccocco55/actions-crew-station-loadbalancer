@@ -1,124 +1,183 @@
 const paymentLayout = (() => {
-    const n = (v) => Number(v ?? 0).toLocaleString('ko-KR');
-    const safe = (v, def = '-') => (v === null || v === undefined || v === '') ? def : String(v);
 
-    const $section = () => document.querySelector('#section-payment');
-    const $tbody   = () => $section()?.querySelector('#payment-tbody');
-    const $count   = () => $section()?.querySelector('.receipt-count .count-amount');
-    const getTbody = () => document.querySelector('#section-payment #payment-tbody');
+    const formatNumber = (value) => Number(value ?? 0).toLocaleString('ko-KR');
+    const safeText = (value, defaultText = '-') =>
+        value === null || value === undefined || value === '' ? defaultText : String(value);
+
+
+    const getSection = () => document.querySelector('#section-payment');
+    const getTableBody = () => getSection()?.querySelector('#payment-tbody');
+    const getCountElement = () => getSection()?.querySelector('.receipt-count .count-amount');
+    const getApprovedAmountElement = () => getSection()?.querySelector('.amount-box.revenue-box .span-amount');
+    const getCanceledAmountElement = () => getSection()?.querySelector('.amount-box.cancel-box .span-amount');
+
+    // 결제 상태
+    const convertPhaseToKorean = (phase) => {
+        const phaseUpper = String(phase ?? '').toUpperCase();
+        if (phaseUpper.includes('PENDING') || phaseUpper.includes('PROGRESS')) return '결제대기중';
+        if (phaseUpper.includes('SUCCESS')) return '결제완료';
+        if (phaseUpper.includes('CANCEL') || phaseUpper.includes('REFUND')) return '결제취소';
+        return '-';
+    };
+
+    const getPhaseColor = (phase) => {
+        const phaseUpper = String(phase ?? '').toUpperCase();
+        if (phaseUpper.includes('SUCCESS')) return '#40c8bc';
+        if (phaseUpper.includes('CANCEL') || phaseUpper.includes('REFUND')) return '#fe657e';
+        if (phaseUpper.includes('PENDING') || phaseUpper.includes('PROGRESS')) return '#8baaff';
+        return '#888'; // 회색: 기타
+    };
+
+    const convertDeliveryMethod = (method) => {
+        const normalized = String(method ?? '').toLowerCase();
+        if (normalized === 'direct') return '직거래';
+        if (normalized === 'parcel') return '택배거래';
+        return '-';
+    };
+
 
     const clear = () => {
-        const tb = $tbody();
-        if (tb) tb.innerHTML = '';
-        const cnt = $count();
-        if (cnt) cnt.textContent = '0';
+        const tableBody = getTableBody();
+        if (tableBody) tableBody.innerHTML = '';
+        if (getCountElement()) getCountElement().textContent = '0';
+        if (getApprovedAmountElement()) getApprovedAmountElement().textContent = '0';
+        if (getCanceledAmountElement()) getCanceledAmountElement().textContent = '0';
     };
 
-    const showEmpty = () => {
-        const tb = $tbody();
-        if (!tb) return;
-        tb.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">조회된 결제가 없습니다.</td></tr>`;
-        const cnt = $count();
-        if (cnt) cnt.textContent = '0';
+    const showEmptyTable = () => {
+        const tableBody = getTableBody();
+        if (!tableBody) return;
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    조회된 결제가 없습니다.
+                </td>
+            </tr>`;
+        if (getCountElement()) getCountElement().textContent = '0';
     };
 
-    // 배열 또는 {content, totalCount} 모두 지원
-    const normalizeList = (raw) => Array.isArray(raw) ? raw : (raw?.content || []);
-    const getTotalCount = (raw, list) => {
-        if (typeof raw?.totalCount === 'number') return raw.totalCount;
-        return list.length;
-    };
+     // 결제 목록 표시
+    const showPayments = (response = {}) => {
+        const tableBody = getTableBody();
+        if (!tableBody) return;
 
-    const toPhaseKo = (phase) => {
-        const s = String(phase ?? '').toUpperCase();
-        if (s.includes('PROGRESS')) return '결제진행중';
-        if (s.includes('SUCCESS'))  return '결제완료';
-        if (s.includes('CANCEL'))   return '결제취소';
-        return phase ?? '-';
-    };
+        const paymentList = Array.isArray(response)
+            ? response
+            : response.content || response.payments || [];
+        tableBody.innerHTML = '';
 
-    const showPayments = (raw = []) => {
-        const tb = $tbody();
-        if (!tb) return;
-
-        const list = normalizeList(raw);
-        // 🔁 덮어쓰기 모드
-        tb.innerHTML = '';
-
-        if (!list.length) {
-            showEmpty();
+        if (!paymentList.length) {
+            showEmptyTable();
             return;
         }
 
-        const frag = document.createDocumentFragment();
+        const fragment = document.createDocumentFragment();
 
-        list.forEach((p) => {
-            const tr = document.createElement('tr');
-            tr.dataset.paymentId = p.id;
+        paymentList.forEach((payment) => {
+            const row = document.createElement('tr');
+            row.dataset.paymentId = payment.id;
 
-            const statusText = safe(p.statusText ?? toPhaseKo(p.paymentPhase));
-            const timeText   = safe(p.paidAt ?? p.updatedDatetime);
-            const methodText = safe(p.paymentMethod ?? p.deliveryType);
+            const phaseText = convertPhaseToKorean(payment.paymentPhase);
+            const phaseColor = getPhaseColor(payment.paymentPhase);
+            const paidDate = safeText(payment.paidAt ?? payment.updatedDatetime);
+            const deliveryMethod = convertDeliveryMethod(payment.deliveryType ?? payment.paymentMethod);
 
-            tr.innerHTML = `
-        <td class="td-name"><div class="good-name">${safe(p.productName)}</div></td>
-        <td class="td-amount text-right pr-4 font-weight-bold">
-          ${n(p.amount)} <span class="amount-unit">원</span>
-        </td>
-        <td class="td-method"><div class="pq">${methodText}</div></td>
-        <td class="td-method">
-          <div class="pq">토스페이</div>
-        </td>
-        <td class="td-status">
-          <div class="label-form">
-            <span class="badge-label text-nowrap text-dark approval-status">${statusText}</span>
-          </div>
-        </td>
-        <td class="td-at text-center"><div class="date-at text-dark">${timeText}</div></td>
-        <td class="td-buyer text-center text-dark">
-          <div class="buyer-wrapper">
-            <div class="user-name">${safe(p.buyerName)}</div>
-          </div>
-        </td>
-        <td class="td-action text-center">
-          <button type="button" class="action-btn view" 
-          data-paymentid="${p.id}">
-            <i class="mdi mdi-chevron-right"></i>
-          </button>
-        </td>
-      `;
-            frag.appendChild(tr);
+
+            row.innerHTML = `
+                <td class="td-name"><div class="good-name">${safeText(payment.productName)}</div></td>
+                <td class="td-amount text-right pr-4 font-weight-bold">
+                    ${formatNumber(payment.amount)} <span class="amount-unit">원</span>
+                </td>
+                <td class="td-method"><div>${deliveryMethod}</div></td>
+                <td class="td-method"><div>토스페이</div></td>
+                <td class="td-status">
+                    <span class="badge-label" style="color:${phaseColor}; font-weight:600;">
+                        ${phaseText}
+                    </span>
+                </td>
+                <td class="td-at text-center">
+                    <div class="date-at text-dark">${paidDate}</div>
+                </td>
+                <td class="td-buyer text-center text-dark">
+                    <div class="buyer-wrapper">
+                        <div class="user-name">${safeText(payment.buyerName)}</div>
+                    </div>
+                </td>
+                <td class="td-action text-center">
+                    <button type="button" class="action-btn view" data-paymentid="${payment.id}">
+                        <i class="mdi mdi-chevron-right"></i>
+                    </button>
+                </td>
+            `;
+            fragment.appendChild(row);
         });
 
-        tb.appendChild(frag);
+        tableBody.appendChild(fragment);
+        if (getCountElement()) getCountElement().textContent = String(paymentList.length);
 
-        const cnt = $count();
-        if (cnt) cnt.textContent = String(getTotalCount(raw, list));
+        updateSummaryBox();
     };
 
+     // 결제 요약 (승인/취소 합계)
+    const updateSummaryBox = async (opt = {}) => {
+        try {
+        } catch (err) {
+            console.error("결제 요약 불러오기 실패:", err);
+        }
+    };
+
+
+    // 결제 상세 모달
     const showPaymentDetail = (detail = {}) => {
         const modal = document.getElementById('payment-modal');
         if (!modal) return;
 
-        const set = (k, v) => {
-            const el = modal.querySelector(`[data-bind="${k}"]`);
-            if (el) el.textContent = safe(v);
+        const bindText = (key, value) => {
+            const element = modal.querySelector(`[data-bind="${key}"]`);
+            if (element) element.textContent = safeText(value);
         };
 
-        set('productName', detail.productName);
-        set('amount', detail.amount != null ? `${n(detail.amount)}원` : '-');
-        set('buyerName', detail.buyerName);
-        set('buyerPhone', detail.buyerPhone);
-        set('buyerEmail', detail.buyerEmail);
-        set('paidAt', detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
+        // 구매자 정보
+        bindText('productName', detail.productName);
+        bindText('amount', detail.amount != null ? `${formatNumber(detail.amount)}원` : '-');
+        bindText('buyerName', detail.buyerName);
+        bindText('buyerPhone', detail.buyerPhone);
+        bindText('buyerEmail', detail.buyerEmail);
+        bindText('address', detail.address);
+        bindText('status', convertPhaseToKorean(detail.paymentPhase));
+        bindText('paidAt', detail.paidAt ?? detail.createdDatetime ?? detail.updatedDatetime);
 
-        set('sellerName', detail.sellerName);
-        set('sellerPhone', detail.sellerPhone);
-        set('sellerEmail', detail.sellerEmail);
-        set('listedAt', detail.listedAtText ?? detail.listedAt);
-        set('deliveryType', detail.deliveryTypeText ?? detail.deliveryType);
-        set('address', detail.address);
+        // 판매자 정보
+        bindText('sellerName', detail.sellerName);
+        bindText('sellerPhone', detail.sellerPhone);
+        bindText('sellerEmail', detail.sellerEmail);
+        bindText('listedAt', detail.listedAt ?? '-');
+        bindText('deliveryType', convertDeliveryMethod(detail.deliveryType));
+
+
+        // 모달 열기
+        modal.style.display = 'block';
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+            modal.style.background = 'rgba(0,0,0,0.5)';
+            document.body.classList.add('modal-open');
+        });
+
+        // 닫기 버튼 처리
+        modal.querySelectorAll('.close, .btn-close').forEach((btn) => {
+            btn.onclick = () => {
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                setTimeout(() => (modal.style.display = 'none'), 150);
+            };
+        });
     };
 
-    return { clear, showEmpty, showPayments, showPaymentDetail };
+    return {
+        clear,
+        showEmptyTable,
+        showPayments,
+        showPaymentDetail,
+        updateSummaryBox,
+    };
 })();

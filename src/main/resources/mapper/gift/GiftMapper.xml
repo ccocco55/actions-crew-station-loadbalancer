@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.crewstation.mapper.gift.GiftMapper">
-    <sql id="giftSearch">
+    <sql id="giftWhere">
         <where>
-        <if test="search.keyword != null and search.keyword != ''">
-            and (
-            vpp.purchase_country like '%' || #{search.keyword} || '%'
-            or vpp.post_title like '%' || #{search.keyword} || '%'
-            )
-        </if>
+            vpp.created_datetime + (vpp.purchase_limit_time || ' hour')::interval > now()
+            <if test="search.keyword != null and search.keyword != ''">
+                and (
+                vpp.purchase_country like '%' || #{search.keyword} || '%'
+                or vpp.post_title      like '%' || #{search.keyword} || '%'
+                )
+            </if>
         </where>
     </sql>
     <select id="getGift">
@@ -47,12 +48,10 @@
     <select id="countGifts">
         select count(vpp.id)
         from tbl_member tm
-                 join view_post_purchase vpp
-                      on tm.id = vpp.member_id
-                 join tbl_post_section tps on vpp.id = tps.post_id and vpp.post_status = 'active'
-                 join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
-
-        <include refid="giftSearch"/>
+        join view_post_purchase vpp on tm.id = vpp.member_id
+        join tbl_post_section tps   on vpp.id = tps.post_id and vpp.post_status = 'active'
+        join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
+        <include refid="giftWhere"/>
     </select>
 
     <select id="findGifts" resultType="com.example.crewstation.dto.gift.GiftDTO">
@@ -71,12 +70,14 @@
         vfps.file_name               as fileName,
         tm.member_name               as memberName,
         tm.chemistry_score           as chemistryScore,
-        tm.social_img_url            as socialImgUrl
+        tm.social_img_url            as socialImgUrl,
+        vfmf.file_path               as memberFilePath
         from tbl_member tm
         join view_post_purchase vpp on tm.id = vpp.member_id
         join tbl_post_section tps   on vpp.id = tps.post_id and vpp.post_status = 'active'
         join view_file_post_section_file vfps on tps.id = vfps.post_section_id and vfps.image_type = 'main'
-        <include refid="giftSearch"/>
+        left join view_file_member_file vfmf on vfmf.member_id = tm.id
+        <include refid="giftWhere"/>
         order by ${search.orderType}
         limit #{criteria.rowCount} offset #{criteria.offset}
     </select>
