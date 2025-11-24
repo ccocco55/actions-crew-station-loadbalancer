@@ -81,7 +81,7 @@ memberPhone.addEventListener("keyup", (e) => {
 
     const phoneRegex = /^010\d{8}$/;
 
-    if (!phoneRegex.test(phone)) {
+    if (!phoneRegex.test(콜)) {
         phoneText.style.display = "block";
         phoneTextSpan.innerText = "번호를 다시 확인해 주세요.";
 
@@ -143,7 +143,7 @@ let result = null;
 
 codeSendBtn.addEventListener("click", async (e) => {
     const phone = inputPhone.value;
-    result = await memberService.checkPhone(phone);
+    result = await memberService.checkPhone(콜);
 
     console.log(result.code);
 });
@@ -260,8 +260,10 @@ passwordCheckInput.addEventListener("blur", (e) => {
         passwordCheckError.style.display = "block";
         passwordCheckError.firstElementChild.textContent =
             "비밀번호가 다릅니다.";
+        passwordInput.classList.add("error");
     } else if (passwordInput.value.trim() === passwordCheckInput.value.trim()) {
         passwordCheckError.style.display = "none";
+        passwordCheckInput.classList.remove("error");
     }
 });
 
